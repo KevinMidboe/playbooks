@@ -1,0 +1,26 @@
+####################
+# HOST DEFINITIONS #
+####################
+
+[schleppe_standard]
+plex		ansible_host=10.0.0.51		ansible_port=22		ansible_user=root
+bifrost 	ansible_host=10.0.0.53		ansible_port=22		ansible_user=root
+vinlottis	ansible_host=10.0.0.52		ansible_port=22		ansible_user=root
+seasoned	ansible_host=10.0.0.54		ansible_port=22		ansible_user=root
+elastic		ansible_host=10.0.0.55		ansible_port=22		ansible_user=root
+
+drone		ansible_host=10.0.0.62		ansible_port=22		ansible_user=root
+minecraft	ansible_host=10.0.0.65		ansible_port=22		ansible_user=root
+hitler		ansible_host=10.0.0.66		ansible_port=22		ansible_user=root
+
+####################
+# BIGASS GROUPS    #
+####################
+[schleppe:children]
+schleppe_standard
+
+####################
+# VARS             #
+####################
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3
