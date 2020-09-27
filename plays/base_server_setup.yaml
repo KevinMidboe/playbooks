@@ -1,0 +1,10 @@
+---
+- name: Basic setup, brute force protection, firewall and log shipping
+  hosts: vinlottis
+  roles:
+    - role: roles/fail2ban
+
+#- name: SSH keys and ssh_config         # - Sets up the ssh role, with keys, ssh_config & sshd_config
+#  hosts: schleppe
+#  roles:
+#    - role: roles/ssh
