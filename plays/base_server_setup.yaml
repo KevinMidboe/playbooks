@@ -1,10 +1,17 @@
 ---
 - name: Basic setup, brute force protection, firewall and log shipping
-  hosts: vinlottis
+  hosts: schleppe
   roles:
     - role: roles/fail2ban
+    - role: roles/firewall
 
-#- name: SSH keys and ssh_config         # - Sets up the ssh role, with keys, ssh_config & sshd_config
-#  hosts: schleppe
-#  roles:
-#    - role: roles/ssh
+- name: SSH keys and ssh_config         # - Sets up the ssh role, with keys, ssh_config & sshd_config
+  hosts: schleppe
+  roles:
+    - role: roles/ssh
+
+- name: Install and setup zsh and oh-my-zsh
+  hosts: schleppe
+  roles:
+    - role: roles/zsh
+    - role: roles/oh-my-zsh
