@@ -1,0 +1,31 @@
+# {{ ansible_managed }}
+
+###################
+# Public IP hosts #
+###################
+
+Host vinlottis memestream wagovipps
+    HostName %h.schleppe.cloud
+    User root
+
+###################
+# NAT             #
+###################
+
+###################
+# Globals         #
+# #################
+
+#Host *.schleppe.cloud
+#    User root
+
+Host *
+    Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
+    Compression yes
+    CompressionLevel 9
+    KexAlgorithms curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256
+    MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-ripemd160-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,hmac-ripemd160,umac-128@openssh.com
+    ServerAliveCountMax 30
+    ServerAliveInterval 30
+    TCPKeepAlive no
+    VisualHostKey no

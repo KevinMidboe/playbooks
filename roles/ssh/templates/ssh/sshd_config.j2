@@ -1,0 +1,42 @@
+# {{ ansible_managed }}
+
+Port 22
+Protocol 2
+
+HostKey /etc/ssh/ssh_host_ed25519_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey /etc/ssh/ssh_host_rsa_key
+
+# Logging
+SyslogFacility AUTH
+LogLevel INFO
+
+# Authentication:
+LoginGraceTime 2m
+PermitRootLogin yes
+StrictModes yes
+
+PubkeyAuthentication yes
+
+AuthorizedKeysFile /etc/ssh/keys/%u/authorized_keys /etc/ssh/keys/%u/authorized_drone_keys
+
+HostbasedAuthentication no
+IgnoreRhosts yes
+
+PasswordAuthentication no 
+PermitEmptyPasswords no
+ChallengeResponseAuthentication no
+
+UsePAM yes
+
+X11Forwarding no
+PrintMotd no
+PrintLastLog yes
+TCPKeepAlive no
+
+# Allow client to pass locale environment variables
+AcceptEnv LANG *
+
+# override default of no subsystems
+Subsystem	sftp	/usr/lib/openssh/sftp-server
+
