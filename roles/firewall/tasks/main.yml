@@ -1,0 +1,26 @@
+---
+- name: Update apt cache if older than 1 hour
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Add ufw
+  apt: pkg=ufw state=latest
+
+- name: Enable access via ssh
+  ufw:
+    rule: allow
+    port: '22'
+
+- name: Enable 80 if webserver
+  ufw: 
+    rule: allow
+    port: '80'
+  when: "'web' in group_names"
+
+- name: Enable 443 if webserver
+  ufw: 
+    rule: allow
+    port: '443'
+  when: "'web' in group_names"
+

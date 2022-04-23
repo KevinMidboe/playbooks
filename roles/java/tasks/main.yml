@@ -1,0 +1,4 @@
+---
+- name: Installing Java OpenJDK
+  apt: name=default-jdk state=latest
+
