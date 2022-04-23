@@ -1,0 +1,23 @@
+####################
+# HOST DEFINITIONS #
+####################
+
+# [schleppe_standard]
+bifrost 	ansible_host=10.0.0.53		ansible_port=22		ansible_user=root
+vinlottis	ansible_host=10.0.0.52		ansible_port=22		ansible_user=root
+seasoned	ansible_host=10.0.0.54		ansible_port=22		ansible_user=root
+wagovipps	ansible_host=10.0.0.58		ansible_port=22		ansible_user=root
+memestream	ansible_host=10.0.0.71		ansible_port=22		ansible_user=root
+
+[webservers]
+bifrost
+vinlottis
+seasoned
+wagovipps
+memestream
+
+####################
+# VARS             #
+####################
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3
