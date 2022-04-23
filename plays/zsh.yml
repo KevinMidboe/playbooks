@@ -1,0 +1,5 @@
+- hosts: all
+  roles:
+    - role: roles/oh-my-zsh
+      users:
+        - username: kevin
