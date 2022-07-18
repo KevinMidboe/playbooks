@@ -19,7 +19,7 @@
     state: latest
     update_cache: true
 
-- name: Install reqired packages
+- name: Install required packages
   apt: name={{ item }} state=present
   with_items:
     - git
@@ -115,4 +115,3 @@
     name: vinlottis
     state: started
     enabled: yes
-

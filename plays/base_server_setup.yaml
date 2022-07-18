@@ -11,3 +11,4 @@
         - username: root
           oh_my_zsh:
             theme: robbyrussell
+    - role: roles/bacula
