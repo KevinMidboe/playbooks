@@ -1,0 +1,39 @@
+#
+# Default  Bacula File Daemon Configuration file
+#
+#  For Bacula release 9.4.2 (04 February 2019) -- ubuntu 20.04
+#
+# There is not much to change here except perhaps the
+# File daemon Name to
+#
+#
+# Copyright (C) 2000-2015 Kern Sibbald
+# License: BSD 2-Clause; see file LICENSE-FOSS
+#
+
+#
+# List Directors who are permitted to contact this File daemon
+# TODO: Move password to be fetched/synced in vault
+Director {
+  Name = clio-dir
+  Password = ""
+}
+
+#
+# "Global" File daemon configuration specifications
+#
+FileDaemon {
+  Name = {{ inventory_hostname_short }}-fd
+  FDport = 9102
+  WorkingDirectory = /var/lib/bacula
+  Pid Directory = /run/bacula
+  Maximum Concurrent Jobs = 20
+  Plugin Directory = /usr/lib/bacula
+  FDAddress = {{ inventory_hostname_short }}.schleppe
+}
+
+# Send all messages except skipped files back to Director
+Messages {
+  Name = Standard
+  director = clio-dir = all, !skipped, !restored
+}
