@@ -1,4 +1,4 @@
 ---
 - name: ssh config
   template: src=ssh/ssh_config.j2 dest=/root/.ssh/config owner=root mode=640
-
+  notify: restart ssh

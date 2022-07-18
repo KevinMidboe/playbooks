@@ -1,0 +1,22 @@
+---
+- name: Assure ssh keys dir exists
+  file: path=/etc/ssh/keys/root state=directory
+
+- name: Assure ssh user key file exists 
+  file: path=/etc/ssh/keys/root/authorized_keys state=file
+
+- name: Add other user keys with prefix to root ssh keys folder
+  template: src=ssh/keys/{{ item }}.j2 dest=/etc/ssh/keys/root/{{item}}-authorized_keys
+  with_items: "{{ ssh_root_additional_key_users | default([]) }}"
+
+- name: Assure other user keys file w/ prefix exists in root ssh folder
+  file: path=/etc/ssh/keys/root/{{ item }}-authorized_keys state=file
+  with_items: "{{ ssh_root_additional_key_users | default([]) }}"
+
+- name: Append users key file to root ssh keys
+  shell: "cat /etc/ssh/keys/root/{{ item }}-authorized_keys >> /etc/ssh/keys/root/authorized_keys"
+  with_items: "{{ ssh_root_additional_key_users | default([]) }}"
+
+- name: Remove extra user key file
+  file: path=/etc/ssh/keys/root/{{ item }}-authorized_keys state=absent
+  with_items: "{{ ssh_root_additional_key_users | default([]) }}"

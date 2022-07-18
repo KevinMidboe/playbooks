@@ -1,0 +1,7 @@
+---
+# Proxmox lxc specific
+
+users:
+  - root
+ssh_root_additional_key_users:
+  - kevin
