@@ -10,8 +10,3 @@
 
 - include: append_to_root_key.yml
   when: (ssh_root_additional_key_users is defined) and (ssh_root_additional_key_users|length > 0)
-
-- include: append_to_root_key.yml
-  when: ssh_keys_drone
-  vars:
-    ssh_root_additional_key_users: ['drone']
