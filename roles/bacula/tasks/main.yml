@@ -1,3 +1,3 @@
 ---
 - include: bacula_client.yml
-  when: bacula_client_setup == true
+  when: bacula_client_setup is defined and (bacula_client_setup | bool)
