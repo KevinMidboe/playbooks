@@ -1,0 +1,7 @@
+---
+service_description: "A service to run the Vinlottis node & vue app"
+vinlottis_dir: "/opt/vinlottis/"
+mongodb_dir: "/root/mongodb/"
+git_repo_url: "https://github.com/kevinmidboe/vinlottis.git"
+node_version: 16
+

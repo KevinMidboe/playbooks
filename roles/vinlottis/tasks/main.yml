@@ -1,0 +1,118 @@
+---
+- name: Install gpg package
+  apt:
+    name: gpg
+    state: present
+
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu focal stable
+    state: present
+
+- name: Update apt
+  apt:
+    state: latest
+    update_cache: true
+
+- name: Install reqired packages
+  apt: name={{ item }} state=present
+  with_items:
+    - git
+    - curl
+    - wget
+    - nginx
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+    - python3-pip
+    - virtualenv
+    - python3-setuptools
+    - docker-ce
+    - docker-compose
+
+- name: Install the gpg key for nodejs LTS
+  apt_key:
+    url: "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
+    state: present
+
+- name: Install the nodejs LTS repos
+  apt_repository:
+    repo: "deb https://deb.nodesource.com/node_{{ node_version }}.x bullseye main"
+    state: present
+    update_cache: yes
+
+- name: Install the nodejs
+  apt:
+    name: nodejs
+    state: present
+
+- name: Install yarn using npm
+  shell:
+    npm install -g yarn
+    # npm:
+    #   package: yarn
+    #   state: present
+
+- name: Create docker directory
+  file:
+    path: "{{ mongodb_dir }}"
+    state: directory
+
+- name: Create mongo-volume directory
+  file:
+    path: "{{ mongodb_dir }}/mongo-volume"
+    state: directory
+
+- name: Create mongo backup directory
+  file:
+    path: "{{ mongodb_dir }}/backup"
+    state: directory
+
+- name: Copy docker-compose template file
+  template:
+    src: templates/mongo-docker-compose.yml.j2
+    dest: "{{ mongodb_dir }}/docker-compose.yml"
+
+- name: Run mongo db container
+  shell:
+    cmd: "docker-compose -f docker-compose.yml up -d"
+    chdir: "{{ mongodb_dir }}"
+
+- name: Clone a vinlottis repository
+  git:
+    repo: "{{ git_repo_url }}"
+    dest: "{{ vinlottis_dir }}"
+    version: "master"
+
+- name: Copy vinlottis config
+  template:
+    src: templates/lottery.config.js.j2
+    dest: "{{ vinlottis_dir }}/config/env/lottery.config.js"
+
+- name: Install packages based on package.json using yarn
+  command: yarn
+  args:
+    chdir: "{{ vinlottis_dir }}"
+
+- name: Build vinlottis app
+  command: yarn build
+  args:
+    chdir: "{{ vinlottis_dir }}"
+
+- name: Create vinlottis systemd service file
+  template:
+    src: templates/vinlottis.service.j2
+    dest: /etc/systemd/system/vinlottis.service
+
+- name: Start vinlottis service
+  systemd:
+    name: vinlottis
+    state: started
+    enabled: yes
+
