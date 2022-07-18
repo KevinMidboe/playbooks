@@ -1,0 +1,5 @@
+---
+hostname: vinlottis-aller
+
+# SSH key users
+ssh_keys_users: ['root', 'kevin', 'kasper']
