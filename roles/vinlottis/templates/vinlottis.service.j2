@@ -1,0 +1,17 @@
+[Unit]
+Description={{ service_description }}
+
+[Service]
+WorkingDirectory={{ vinlottis_dir }}
+ExecStart=/usr/bin/yarn start
+# ExecStartPre=/usr/bin/docker start mongodb
+Restart=always
+# Restart service after 10 seconds if node service crashes
+RestartSec=10
+# Output to syslog
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=vinlottis
+
+[Install]
+WantedBy=multi-user.target

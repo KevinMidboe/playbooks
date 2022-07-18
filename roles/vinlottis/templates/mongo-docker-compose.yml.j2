@@ -1,0 +1,11 @@
+version: '3'
+services:
+  database:
+    image: 'mongo'
+    restart: always
+    container_name: 'mongodb'
+    volumes:
+      - {{ mongodb_dir }}/mongo-volume:/data/db
+      - {{ mongodb_dir }}/backup:/opt/backup
+    ports:
+      - "27017:27017"
