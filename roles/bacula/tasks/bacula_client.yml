@@ -15,7 +15,7 @@
     state: directory
     mode: "0755"
     owner: bacula
-    group: bacula
+    group: root
     recurse: yes
 
 - name: Assure bacula dir exists
@@ -24,7 +24,7 @@
     state: directory
     mode: "0775"
     owner: bacula
-    group: bacula
+    group: root
     recurse: yes
 
 - name: Assure bacula restore dir exists
@@ -33,21 +33,21 @@
     state: directory
     mode: "0755"
     owner: bacula
-    group: bacula
+    group: root
     recurse: yes
 
 - name: bconsole config
   template:
     src: bconsole_clio.j2
     dest: /etc/bacula/bconsole.conf
-    owner: root
-    group: bacula
+    owner: bacula
+    group: root
     ownermode: 640
 
 - name: bacula-fd config
   template:
     src: bacula-fd_clio.j2
     dest: /etc/bacula/bacula-fd.conf
-    owner: root
-    group: bacula
+    owner: bacula
+    group: root
     ownermode: 640
