@@ -1,0 +1,28 @@
+# Default base role values
+# base_domain: "online.ntnu.no"
+base_nameservers:
+  - "10.0.0.72"
+  - "8.8.8.8"
+  - "8.8.4.4"
+base_packages:
+  - python3
+  - python3-pip
+  - git
+  - vim
+  - htop
+  - zsh
+  - dnsutils
+  - python-dev
+  - python-setuptools
+  - ntp
+  - tree
+  - ncdu
+  - ack-grep
+  - ssh
+  - mosh
+  - fail2ban
+  - apticron
+  - cu
+  - openssh-server
+  - openssl
+  - nload

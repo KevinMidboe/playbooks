@@ -1,6 +1,6 @@
 ---
 - name: Basic setup for proxmox vm clients
-  hosts: all
+  hosts: proxmox_vm
   roles:
     - role: roles/prox-qemu-agent
 
