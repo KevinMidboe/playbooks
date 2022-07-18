@@ -1,0 +1,38 @@
+---
+- name: Install gpg package
+  apt:
+    name: gpg
+    state: present
+
+- name: Add hashicorp GPG apt Key
+  apt_key:
+    url: https://apt.releases.hashicorp.com/gpg
+    state: present
+
+- name: Add hashicorp repository
+  apt_repository:
+    repo: deb https://apt.releases.hashicorp.com focal main
+    state: present
+
+- name: Update apt
+  apt:
+    state: latest
+    update_cache: true
+
+- name: Install reqired packages
+  apt:
+    name: ['git', 'curl', 'wget', 'ca-certificates', 'vault']
+    state: present
+
+- name: Vault systemd config
+  template: src=vault/vault_service.j2 dest=/lib/systemd/system/vault.service owner=root mode=640
+
+- name: Reload systemd daemon
+  systemd:
+    daemon_reload: true
+
+- name: Enable and start systemd vault service
+  systemd:
+    name: vault
+    state: started
+    enabled: yes
