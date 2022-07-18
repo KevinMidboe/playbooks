@@ -4,7 +4,12 @@
     state: latest
     update_cache: true
 
-- name: Install bacula package
+- name: Install bacula-fd (file daemon) package
+  apt:
+    name: bacula-fd
+    state: latest
+
+- name: Install bacula-client package
   apt:
     name: bacula-client
     state: latest
