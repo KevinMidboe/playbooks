@@ -24,3 +24,24 @@
     port: '443'
   when: "'web' in group_names"
 
+- name: Enable 9200 if elasticsearch
+  ufw:
+    rule: allow
+    port: '9200'
+  when: enable_elastic_ufw_port
+
+- name: Enable 5601 if kibana
+  ufw:
+    rule: allow
+    port: '5601'
+  when: enable_kibana_ufw_port
+
+- name: Enable 8200 if vault
+  ufw:
+    rule: allow
+    port: '8200'
+  when: enable_vault_ufw_port
+
+- name: Start ufw
+  ufw:
+    state: enabled
