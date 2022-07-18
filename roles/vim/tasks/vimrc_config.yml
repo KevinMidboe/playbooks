@@ -1,0 +1,5 @@
+---
+- name: vimrc config
+  # when: 
+  template: src=vimrc.j2 dest=/home/kevin/.vimrc owner=kevin mode=640
+

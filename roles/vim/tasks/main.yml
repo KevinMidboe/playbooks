@@ -1,0 +1,4 @@
+---
+- include: vim_present.yml
+- include: vimrc_config.yml
+- include: clone_vundle.yml

@@ -1,0 +1,7 @@
+- name: Make sure vim is installed
+  become: true
+  apt:
+    name: vim
+    state: latest
+    update_cache: yes
+    cache_valid_time: 86400

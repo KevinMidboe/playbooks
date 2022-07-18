@@ -1,0 +1,4 @@
+- name: Clone vundle git repo
+  ansible.builtin.git:
+    repo: 'https://github.com/VundleVim/Vundle.vim.git'
+    dest: "'{{ lookup('env', 'HOME') }}'/.vim/bundle/Vundle.vim"
