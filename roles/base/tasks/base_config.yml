@@ -1,0 +1,6 @@
+---
+- name: /etc/resolv.conf
+  template: src=resolv.conf.j2 dest=/etc/resolv.conf owner=root group=root mode=644
+
+- name: /etc/hostname
+  template: src=hostname.j2 dest=/etc/hostname owner=root group=root mode=644
