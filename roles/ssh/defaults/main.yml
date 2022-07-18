@@ -7,8 +7,6 @@ ssh_skip_ssh_keys: false
 # SSH keys for which users should be copied by default
 ssh_keys_users: ['root']
 
-ssh_keys_drone: false
-
 # A list of objects containing the hostname these custom keys should be added to, and a list of the keys themselves
 # Example
 #
