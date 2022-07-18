@@ -47,7 +47,7 @@
     dest: /etc/bacula/bconsole.conf
     owner: bacula
     group: root
-    ownermode: 640
+    mode: "0640"
 
 - name: bacula-fd config
   template:
@@ -55,4 +55,4 @@
     dest: /etc/bacula/bacula-fd.conf
     owner: bacula
     group: root
-    ownermode: 640
+    mode: "0640"
