@@ -44,6 +44,7 @@
       owner: vault
       group: vault
       mode: 644
+  notify: restart vault
 
 - name: Reload systemd daemon
   systemd:
