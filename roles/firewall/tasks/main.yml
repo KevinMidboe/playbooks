@@ -60,6 +60,13 @@
     port: "9103"
   when: enable_bacula_server_ufw_port
 
+- name: Enable 32400 if plex server
+  ufw:
+    rule: allow
+    port: "32400"
+  when: enable_plex_ufw_port
+
+
 - name: Start ufw
   ufw:
     state: enabled
