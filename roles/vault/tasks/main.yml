@@ -24,15 +24,24 @@
     name: ['git', 'curl', 'wget', 'ca-certificates', 'vault']
     state: present
 
-- name: Vault systemd config
-  template: src=vault/vault_service.j2 dest=/lib/systemd/system/vault.service owner=root mode=640
+- name: Enable systemd vault service
+  systemd:
+    name: vault
+    enabled: yes
+
+# - name: Copy original vault systemd config
+#   copy:
+#     src: /lib/systemd/system/vault.service
+#     dest: /lib/systemd/system/vault.service.original
+
+# - name: Vault systemd config
+#   template: src=vault_service.j2 dest=/lib/systemd/system/vault.service owner=root mode=640
 
 - name: Reload systemd daemon
   systemd:
     daemon_reload: true
 
-- name: Enable and start systemd vault service
+- name: Start systemd vault service
   systemd:
     name: vault
     state: started
-    enabled: yes
