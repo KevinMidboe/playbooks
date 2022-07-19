@@ -10,7 +10,10 @@ StartLimitBurst=3
 [Service]
 Type=notify
 EnvironmentFile=/etc/vault.d/vault.env
+User=vault
+Group=vault
 ProtectSystem=full
+ReadWritePaths=/etc/vault.d
 ProtectHome=read-only
 PrivateTmp=yes
 PrivateDevices=yes
