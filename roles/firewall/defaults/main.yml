@@ -6,3 +6,4 @@ enable_kibana_ufw_port: false
 enable_vault_ufw_port: false
 enable_bacula_server_ufw_port: false
 enable_bacula_client_ufw_port: false
+enable_plex_ufw_port: false
