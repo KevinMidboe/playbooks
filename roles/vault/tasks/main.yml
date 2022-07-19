@@ -57,7 +57,7 @@
 
 - name: Vault raft data directory
   file:
-    path: /opt/vault/raft_data
+    path: /opt/vault/data
     state: directory
     mode: "0600"
     owner: vault
