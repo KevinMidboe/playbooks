@@ -29,13 +29,14 @@
     name: vault
     enabled: yes
 
-# - name: Copy original vault systemd config
-#   copy:
-#     src: /lib/systemd/system/vault.service
-#     dest: /lib/systemd/system/vault.service.original
+- name: Copy original vault systemd config
+  copy:
+    src: /lib/systemd/system/vault.service
+    dest: /lib/systemd/system/vault.service.original
+    remote_src: yes
 
-# - name: Vault systemd config
-#   template: src=vault_service.j2 dest=/lib/systemd/system/vault.service owner=root mode=640
+- name: Vault systemd config
+  template: src=vault_service.j2 dest=/lib/systemd/system/vault.service owner=root mode=640
 
 - name: Vault environment file
   template:
@@ -57,9 +58,9 @@
 
 - name: Vault raft data directory
   file:
-    path: /opt/vault/data
+    path: /etc/vault.d/vault/data
     state: directory
-    mode: "0600"
+    mode: "0755"
     owner: vault
     group: vault
     recurse: yes
