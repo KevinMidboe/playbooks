@@ -37,6 +37,14 @@
 # - name: Vault systemd config
 #   template: src=vault_service.j2 dest=/lib/systemd/system/vault.service owner=root mode=640
 
+- name: Vault environment file
+  template:
+      src: vault_env.j2
+      dest: /etc/vault.d/vault.env
+      owner: vault
+      group: vault
+      mode: 644
+
 - name: Reload systemd daemon
   systemd:
     daemon_reload: true
