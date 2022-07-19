@@ -43,7 +43,7 @@
       dest: /etc/vault.d/vault.env
       owner: vault
       group: vault
-      mode: 644
+      mode: '0644'
   notify: restart vault
 
 - name: Vault config file
@@ -52,8 +52,17 @@
       dest: /etc/vault.d/vault.hcl
       owner: vault
       group: vault
-      mode: 644
+      mode: '0644'
   notify: restart vault
+
+- name: Vault raft data directory
+  file:
+    path: /opt/vault/raft_data
+    state: directory
+    mode: "0600"
+    owner: vault
+    group: vault
+    recurse: yes
 
 - name: Reload systemd daemon
   systemd:
