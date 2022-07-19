@@ -42,13 +42,13 @@
     port: "8200"
   when: enable_vault_ufw_port
 
-- name: Enable 9101 if bacula server
+- name: Enable 9101 if bacula client
   ufw:
     rule: allow
     port: "9101"
   when: enable_bacula_client_ufw_port or enable_bacula_server_ufw_port
 
-- name: Enable 9102 if bacula server
+- name: Enable 9102 if bacula client
   ufw:
     rule: allow
     port: "9102"

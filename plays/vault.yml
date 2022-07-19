@@ -3,5 +3,5 @@
   hosts: all
   roles:
     - role: roles/vault
-    - role: roles/ufw
+    - role: roles/firewall
       enable_vault_ufw_port: true
