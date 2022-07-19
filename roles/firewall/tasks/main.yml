@@ -46,13 +46,13 @@
   ufw:
     rule: allow
     port: "9101"
-  when: bacula_client_setup is defined and (bacula_client_setup | bool) or enable_bacula_client_ufw_port or enable_bacula_server_ufw_port
+  when: enable_bacula_client_ufw_port or enable_bacula_server_ufw_port
 
 - name: Enable 9102 if bacula server
   ufw:
     rule: allow
     port: "9102"
-  when: bacula_client_setup is defined and (bacula_client_setup | bool) or enable_bacula_client_ufw_port or enable_bacula_server_ufw_port
+  when: enable_bacula_client_ufw_port or enable_bacula_server_ufw_port
 
 - name: Enable 9103 if bacula server
   ufw:
