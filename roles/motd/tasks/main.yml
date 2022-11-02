@@ -1,0 +1,44 @@
+---
+  - name: create motd-hostname file
+    file:
+      path: /etc/update-motd.d/20-hostname
+      state: touch
+
+  - name: generate motd-hostname from motd-larry using curl
+    command: curl -o /etc/update-motd.d/20-hostname http://motd-larry.schleppe:3000/motd\?text\={{ inventory_hostname }}
+
+  - name: make motd-hostname executable
+    file:
+      path: /etc/update-motd.d/20-hostname
+      mode: +x
+
+  - name: generate motd-abstract
+    template:
+      src: 25-abstract.j2
+      dest: /etc/update-motd.d/25-abstract
+      owner: root
+      group: root
+      mode: +x
+    when: motd_abstract
+
+  - name: check if help-text motd exists
+    stat:
+      path: /etc/update-motd.d/10-help-text
+    register: help_text
+
+  - name: disable help-text motd
+    file:
+      path: /etc/update-motd.d/10-help-text
+      mode: -x
+    when: help_text.stat.exists == true
+
+  - name: check if motd-news motd exists
+    stat:
+      path: /etc/update-motd.d/50-motd-news
+    register: motd_news
+
+  - name: disable motd-news motd
+    file:
+      path: /etc/update-motd.d/50-motd-news
+      mode: -x
+    when: motd_news.stat.exists == true
