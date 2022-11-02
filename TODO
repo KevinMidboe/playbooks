@@ -1,0 +1,9 @@
+
+- Move some of the variables to vault
+  - firewall
+
+- Create a dependency tree on what services must be up first
+  - DNS
+  - hostname-larry
+  - 
+
