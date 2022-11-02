@@ -3,8 +3,10 @@
   apt:
     name: qemu-guest-agent
     state: present
+  when: inventory_hostname in groups["proxmox_vm"]
 
 - name: Start qemu-guest-agent
   ansible.builtin.service:
     name: qemu-guest-agent
     state: started
+  when: inventory_hostname in groups["proxmox_vm"]
