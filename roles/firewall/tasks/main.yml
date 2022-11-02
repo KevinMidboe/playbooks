@@ -66,6 +66,18 @@
     port: "32400"
   when: enable_plex_ufw_port
 
+- name: Enable 3000 if gitea server
+  ufw:
+    rule: allow
+    port: "3000"
+  when: enable_gitea_ufw_port
+
+- name: Enable 51820 if wireguard server
+  ufw:
+    rule: allow
+    port: "51820"
+  when: enable_wireguard_ufw_port
+
 
 - name: Start ufw
   ufw:
