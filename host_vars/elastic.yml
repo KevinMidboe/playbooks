@@ -1,3 +1,1 @@
-- hosts: all
-  vars:
-    enable_elastic_ufw_port: true
+enable_elastic_ufw_port: true
