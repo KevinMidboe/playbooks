@@ -1,0 +1,2 @@
+---
+enable_gitea_ufw_port: true
