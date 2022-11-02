@@ -4,6 +4,7 @@
   roles:
     - role: roles/base                  # - Basic server setup and configuration
     - role: roles/fail2ban              # - SSH Brute force protection
+    - role: roles/prox-qemu-agent       # - If proxmox vm insatll qemu agent
     - role: roles/firewall              # - Firewall, if firewall_enable is true
       enable_bacula_client_ufw_port: true
     - role: roles/ssh                   # - Sets up the ssh role, with keys, ssh_config and sshd_config
@@ -12,4 +13,8 @@
         - username: root
           oh_my_zsh:
             theme: robbyrussell
-    - role: roles/bacula
+        # - username: kevin
+        #   oh_my_zsh:
+        #     theme: robbyrussell
+    - role: roles/motd
+#    - role: roles/bacula
