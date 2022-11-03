@@ -42,3 +42,14 @@
       path: /etc/update-motd.d/50-motd-news
       mode: -x
     when: motd_news.stat.exists == true
+
+  - name: check if unminimize motd exists
+    stat:
+      path: /etc/update-motd.d/60-unminimize
+    register: motd_unminimize
+
+  - name: disable unminimize motd
+    file:
+      path: /etc/update-motd.d/60-unminimize
+      mode: -x
+    when: motd_unminimize.stat.exists == true
