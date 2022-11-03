@@ -16,13 +16,13 @@
   ufw:
     rule: allow
     port: "80"
-  when: "'web' in group_names"
+  when: "'web' in group_names or enable_80_ufw_port"
 
 - name: Enable 443 if webserver
   ufw:
     rule: allow
     port: "443"
-  when: "'web' in group_names"
+  when: "'web' in group_names or enable_443_ufw_port"
 
 - name: Enable 9200 if elasticsearch
   ufw:

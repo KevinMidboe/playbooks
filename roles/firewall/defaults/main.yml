@@ -9,3 +9,5 @@ enable_bacula_client_ufw_port: false
 enable_plex_ufw_port: false
 enable_gitea_ufw_port: false
 enable_wireguard_ufw_port: false
+enable_80_ufw_port: false
+enable_443_ufw_port: false
