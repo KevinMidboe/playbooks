@@ -13,8 +13,8 @@
         - username: root
           oh_my_zsh:
             theme: robbyrussell
-        # - username: kevin
-        #   oh_my_zsh:
-        #     theme: robbyrussell
+        - username: kevin
+          oh_my_zsh:
+            theme: robbyrussell
     - role: roles/motd
 #    - role: roles/bacula
