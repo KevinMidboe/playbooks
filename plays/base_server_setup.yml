@@ -1,6 +1,6 @@
 ---
 - name: Basic setup, brute force protection, firewall and log shipping
-  hosts: schleppe
+  hosts: all
   roles:
     - role: roles/base                  # - Basic server setup and configuration
     - role: roles/fail2ban              # - SSH Brute force protection
