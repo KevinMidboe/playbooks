@@ -4,10 +4,18 @@
       path: /etc/update-motd.d/20-hostname
       state: touch
 
-  - name: generate motd-hostname from motd-larry using curl
-    command: curl -o /etc/update-motd.d/20-hostname http://motd-larry.schleppe:3000/motd\?text\={{ inventory_hostname }}
+  - name: download motd executable from github.com
+    command: curl -o /usr/local/bin/motd https://raw.githubusercontent.com/kevinmidboe/motdGO/main/motd
 
-  - name: make motd-hostname executable
+  - name: set motd executable permission
+    file:
+      path: /usr/local/bin/motd
+      mode: +x
+
+  - name: generate motd-hostname from motd executable
+    command: motd -font larry3d -str {{ inventory_hostname }} > /etc/update-motd.d/20-hostname
+
+  - name: set motd-hostname executable permission
     file:
       path: /etc/update-motd.d/20-hostname
       mode: +x
