@@ -74,7 +74,7 @@
 
 - name: add custom template theme
   template:
-    src: robbyrussell_zsh_theme-{{ user.username }}.j2
+    src: robbyrussell_zsh_theme.j2
     dest: '~{{ user.username }}/.oh-my-zsh/custom/themes/robbyrussell.zsh-theme'
     mode: 'u=rw,go=r'
   with_items: '{{ users }}'

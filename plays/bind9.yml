@@ -1,0 +1,5 @@
+---
+- name: Install all bind9 service and transfer zone files
+  hosts: all
+  roles:
+    - role: roles/bind9

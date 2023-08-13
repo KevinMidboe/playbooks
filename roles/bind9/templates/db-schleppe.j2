@@ -1,0 +1,109 @@
+$TTL 900
+@       IN      SOA     ns1     root (
+                9                ;<serial-number>
+                900              ;<time-to-refresh>
+                900              ;<time-to-retry>
+                604800           ;<time-to-expire>
+                900              ;<minimum-TTL>
+
+        )
+
+;List Nameservers
+@       IN      NS      ns1.schleppe.
+@       IN      NS      ns3.schleppe.
+
+;Address to name mapping
+mainframe       IN      A       10.0.0.61
+bragi           IN      A       10.0.0.76
+clio            IN      A       10.0.0.77
+gjallarbru      IN      A       10.0.0.79
+homeassistant   IN      A       10.0.0.82
+plex            IN      A       10.0.0.85
+jelly           IN      A       10.0.0.49
+castdeck        IN      A       10.0.0.57
+tibbervibber    IN      A       10.0.0.34
+tesla           IN      A       10.0.0.35
+imgproxy        IN      A       10.0.0.36
+motd-larry      IN      A       10.0.0.121
+bestprojectever IN      A       10.0.0.129
+
+; infra
+ansible         IN      A       10.0.0.56
+bifrost         IN      A       10.0.0.53
+hecate          IN      A       10.0.0.72
+deichman        IN      A       10.0.0.120
+varnish         IN      A       10.0.0.5
+git             IN      A       10.0.0.37
+wireguard       IN      A       10.0.0.75
+drone           IN      A       10.0.0.62
+vault           IN      A       10.0.0.165
+argus           IN      A       10.0.0.136
+bitwarden       IN      A       10.0.0.138
+duplicati       IN      A       10.0.0.139
+
+router          IN      A       10.0.0.1
+heimdall        IN      A       10.0.0.30
+unifi           IN      A       10.0.0.4
+apc             IN      A       10.0.0.8
+
+; logging
+influx          IN      A       10.0.0.86
+grafana         IN      A       10.0.0.86
+prome           IN      A       10.0.0.88
+splunk          IN      A       10.0.0.89
+elastic         IN      A       10.0.0.55
+
+; games
+jensmc          IN      A       10.0.0.33
+kosekroken      IN      A       10.0.0.95
+skyblock        IN      A       10.0.0.96
+apocalypse      IN      A       10.0.0.97
+minecraft       IN      A       10.0.0.65
+hitler          IN      A       10.0.0.66
+
+; sites
+blog            IN      A       10.0.0.59
+adtech          IN      A       10.0.0.122
+fjordmap        IN      A       10.0.0.83
+planetposen     IN      A       10.0.0.84
+mondrian        IN      A       10.0.0.32
+wagovipps       IN      A       10.0.0.58
+seasoned        IN      A       10.0.0.54
+memestream      IN      A       10.0.0.71
+mosaic          IN      A       10.0.0.38
+vinlottis       IN      A       10.0.0.90
+vinlottis-beta  IN      A       10.0.0.91
+allerlottis     IN      A       10.0.0.31
+
+; temp hosts
+gambit          IN      A       10.0.0.127
+wf-video        IN      A       10.0.0.166
+valg            IN      A       10.0.0.87
+
+; pi
+irpie           IN      A       10.0.0.100
+chip            IN      A       10.0.0.101
+brewpi          IN      A       10.0.0.102
+
+; hosts
+adam            IN      A       10.0.0.78
+anna            IN      A       10.0.0.40
+;janus          IN      A       10.0.0.80
+apollo          IN      A       10.0.0.60
+cerberus        IN      A       10.0.0.80
+ambrosia        IN      A       10.0.0.50
+
+; Kubernetes cluster
+kazan           IN      A       10.0.0.150
+;*.kazan                IN      A       10.0.0.153
+;*.kazan                IN      A       10.0.0.152
+*.kazan         IN      A       10.0.0.151
+*.kazan         IN      A       10.0.0.150
+k8s-apollo      IN      A       10.0.0.150
+k8s-ambrosia    IN      A       10.0.0.151
+k8s-cerberus    IN      A       10.0.0.152
+k8s-anna        IN      A       10.0.0.153
+
+;Address to NS name mapping
+ns1.schleppe.   IN      A       10.0.0.72
+ns3.schleppe.   IN      A       10.0.0.72
