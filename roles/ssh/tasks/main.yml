@@ -5,6 +5,9 @@
 - include: ssh_config.yml
   when: not ssh_skip_ssh_config
 
+- include: create_users.yml
+  when: not ssh_skip_ssh_keys
+
 - include: keys.yml
   when: not ssh_skip_ssh_keys
 
