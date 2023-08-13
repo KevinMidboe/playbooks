@@ -9,11 +9,6 @@ base_apt_java_repo: false
 nodejs_version: "18.x"
 
 # Default base role values
-base_domain: "schleppe"
-base_nameservers:
-  - "10.0.0.72"
-  - "8.8.8.8"
-  - "8.8.4.4"
 base_packages:
   - python3
   - python3-pip

@@ -18,12 +18,12 @@
     group: bind
 
 - name: Copy zone configuration for network/inventory
-  template: src=db-{{ bind9_zone }}.j2 dest=/etc/bind/zones/db.{{ bind9_zone }} owner=root group=bind mode=644
+  template: src=db-{{ dns_domain }}.j2 dest=/etc/bind/zones/db.{{ bind9_zone }} owner=root group=bind mode=644
  
 - name: Copy named local configuration for network/inventory
-  template: src=named.conf.local-{{ bind9_zone }}.j2 dest=/etc/bind/named.conf.local owner=root group=bind mode=644
+  template: src=named.conf.local-{{ dns_domain }}.j2 dest=/etc/bind/named.conf.local owner=root group=bind mode=644
 
 - name: Copy named options configuration for network/inventory
-  template: src=named.conf.options.j2 dest=/etc/bind/named.conf.options owner=root group=bind mode=644
+  template: src=named.conf.options.j2 dest=/etc/bind/named.conf.local owner=root group=bind mode=644
 
   
