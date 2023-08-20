@@ -1,0 +1,41 @@
+---
+- name: Ensure immich /opt dir exists
+  file:
+    path: /opt/immich
+    state: directory
+    mode: 0664
+
+- name: Copy docker-compose template
+  template:
+    src: docker-compose.j2
+    dest: /opt/immich/docker-compose.yml
+
+- name: Copy env template
+  template:
+    src: env.j2
+    dest: /opt/immich/.env
+
+- name: Create immich group for nfs share
+  group:
+    name: immich
+    state: present
+    gid: 27000
+
+- name: Ensure mount point exists
+  file:
+    path: /mnt/mainframe-immich
+    state: directory
+
+- name: Ensure immich nfs mount is in fstab
+  shell: |
+    EXISTS=$(cat /etc/fstab | grep "{{nfs_mount}} {{ mount_point }}")
+    if [ -z "$EXISTS" ]; then
+      echo "{{ nfs_mount }} {{ mount_point }} nfs defaults 0 0" | tee -a /etc/fstab
+    fi
+    mount {{ mount_point }}
+
+- name: Start immich docker containers
+  shell: "docker-compose up -d"
+  args:
+    chdir: /opt/immich
+
