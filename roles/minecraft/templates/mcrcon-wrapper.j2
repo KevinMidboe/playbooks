@@ -1,0 +1,6 @@
+#!/bin/sh
+server_properties_path=$(dirname "$0")"/../server/server.properties"
+rcon_port=$(awk -F "=" '/rcon.port/ {print $2}' "$server_properties_path")
+rcon_password=$(awk -F "=" '/rcon.password/ {print $2}' "$server_properties_path")
+"$(dirname "$0")/mcrcon/mcrcon" -H 127.0.0.1 -P "$rcon_port" -p "$rcon_password" "$1"
+
