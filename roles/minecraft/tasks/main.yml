@@ -1,0 +1,53 @@
+---
+- name: Ensure minectaft /opt dir exists
+  file:
+    path: /opt/minecraft
+    state: directory
+    mode: 0755
+
+- name: Install java openjdk 8
+  package:
+    name:
+      - git
+      - build-essential
+      - openjdk-8-jre-headless
+    state: latest
+
+- name: Create minecraft user
+  user:
+    name: minecraft
+
+- name: Copy minecraft systemd template
+  template:
+    src: minecraft_systemd.j2
+    dest: /etc/systemd/system/minecraft.service
+
+- name: Copy minecraft server environment Makefile
+  template:
+    src: Makefile.j2
+    dest: /opt/minecraft/Makefile
+
+- name: Setup minecraft server envinronment using Makefile
+  make:
+    chdir: /opt/minecraft
+    target: install
+
+- name: Build default mcrcon target
+  make:
+    chdir: /opt/minecraft/tools/mcrcon
+    
+- name: Install mcrcon
+  make:
+    chdir: /opt/minecraft/tools/mcrcon
+    target: install
+
+- name: Configure rcon in server.properties
+  make:
+    chdir: /opt/minecraft
+    target: configure-rcon
+    
+- name: Copy mcrcon-wrapper script
+  template:
+    src: mcrcon-wrapper.sh
+    dest: /opt/minecraft/tools/mcrcon-wrapper.sh
+

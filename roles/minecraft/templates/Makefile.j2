@@ -1,0 +1,63 @@
+.PHONY: backup install password update configure-rcon
+
+MCRCON_PASS_FILE=/opt/minecraft/.mcrcon_pass
+MCRCON=/opt/minecraft/tools/mcrcon/mcrcon -H 127.0.0.1 -P 25575 -p
+
+mcrcon_password_missing:
+        @[ -f $(MCRCON_PASS_FILE) ] || echo "Password missing run: make password."
+        @[ -f $(MCRCON_PASS_FILE) ] || exit 1
+
+password:
+        @[ ! -f $(MCRCON_PASS_FILE) ] || echo "Password already exists."
+        @[ ! -f $(MCRCON_PASS_FILE) ] || exit 1
+        @echo "Creating new mcrcon password"
+        @echo $$(tr -dc A-Za-z0-9 </dev/urandom | head -c 32 ; echo '') > $(MCRCON_PASS_FILE)
+        @echo "Please sync server/server.properties with value contents of $(MCRCON_PASS_FILE)"
+
+install:
+        mkdir -p backups
+        mkdir -p server
+        mkdir -p server/versions
+        mkdir -p tools
+        @echo "Cloning mcrcon repo..."
+        @git clone https://github.com/Tiiffi/mcrcon.git tools ||:
+        @echo "\nNavigate to tools/mcrcon and run:"
+        @echo "  make\n  sudo make install"
+
+confiure-rcon: ensure-rcon-enabled ensure-rcon-port
+	@echo "rcon configured"
+
+ensure-rcon-enabled:
+	@echo "Enabling rcon"
+	@sed -i -e '/enable-rcon=/ s/=.*/=true/' server/server.properties
+
+ensure-rcon-port:
+	@echo "Setting rcon port to {{ rcon_port }}"
+	@sed -i -e '/rcon.port=/ s/=.*/={{ rcon_port }}/' server/server.properties
+ 
+update:
+        @echo "Copy link from: https://www.minecraft.net/en-us/download/server"
+        @read -p "Link: " jar; \
+                wget -O new_server.jar $$jar
+        @rm server/server.jar
+        @read -p "Version number: " version; \
+                mkdir -p server/versions/$$version; \
+                mv new_server.jar server/versions/$$version/server.jar; \
+                ln -s /opt/minecraft/server/versions/$$version/server.jar server/server.jar
+        @chown -R minecraft:minecraft server/versions/$$version
+        @chown -R minecraft:minecraft server/server.jar
+
+backup: mcrcon_password_missing
+        @echo "Shutting down server in 5 seconds"
+        @$(MCRCON) $$(cat $(MCRCON_PASS_FILE)) "say Server backup in 5 seconds. Should be back within 60 seconds."
+        @sleep 1; $(MCRCON) $$(cat $(MCRCON_PASS_FILE)) "say 4..";
+        @sleep 1; $(MCRCON) $$(cat $(MCRCON_PASS_FILE)) "say 3.."
+        @sleep 1; $(MCRCON) $$(cat $(MCRCON_PASS_FILE)) "say 2.."
+        @sleep 1; $(MCRCON) $$(cat $(MCRCON_PASS_FILE)) "say 1.."
+        @sleep 1; $(MCRCON) $$(cat $(MCRCON_PASS_FILE)) "say See you soon "👋
+        @$(MCRCON) $$(cat $(MCRCON_PASS_FILE)) save-all stop;
+        @sudo systemctl stop minecraft.service
+        @echo "Archiving world..."
+        @tar -czf backups/$$(date +%Y.%m.%d)_world-backup.tar.gz server/world ||:
+        @sudo systemctl start minecraft.service
+        @echo "Booting up minecraft server again."
