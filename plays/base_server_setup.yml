@@ -8,12 +8,5 @@
     - role: roles/firewall              # - Firewall, if firewall_enable is true
     - role: roles/ssh                   # - Sets up the ssh role, with keys, ssh_config and sshd_config
     - role: roles/oh-my-zsh
-      users:
-        - username: root
-          oh_my_zsh:
-            theme: robbyrussell
-        - username: kevin
-          oh_my_zsh:
-            theme: robbyrussell
 #    - role: roles/motd
 #    - role: roles/bacula

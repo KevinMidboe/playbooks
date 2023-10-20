@@ -1,7 +1,11 @@
 ---
-# Proxmox lxc specific
-
+# Specific variables for Proxmox lxc group
 users:
-  - root
+  - username: root
+    oh_my_zsh:
+      theme: robbyrussell
+  - username: kevin
+    oh_my_zsh:
+      install: no
 ssh_root_additional_key_users:
   - kevin
