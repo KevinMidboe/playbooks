@@ -1,10 +1,9 @@
 [Unit]
-Description=Varnish Cache, a high-performance HTTP accelerator
-After=network-online.target nss-lookup.target
+Description=Varnish HTTP accelerator
+Documentation=https://www.varnish-cache.org/docs/6.1/ man:varnishd
 
 [Service]
-Type=forking
-KillMode=process
+Type=simple
 
 # Maximum number of open files (for ulimit -n)
 LimitNOFILE=131072
@@ -13,7 +12,10 @@ LimitNOFILE=131072
 # (varnishd -l argument)
 # Default log size is 80MB vsl + 1M vsm + header -> 82MB
 # unit is bytes
-LimitMEMLOCK=85983232
+# LimitMEMLOCK=85983232
+
+# Varnish default
+LimitMEMLOCK=82000
 
 # Enable this to avoid "fork failed" on reload.
 TasksMax=infinity
@@ -22,13 +24,21 @@ TasksMax=infinity
 LimitCORE=infinity
 
 ExecStart=/usr/sbin/varnishd \
+    -j unix,user=vcache \
+    -F \
     -a :80 \
     -a :443 \
-    -a localhost:8443,PROXY \
     -p feature=+http2 \
+    -T localhost:6082 \
     -f /etc/varnish/default.vcl \
+    -S /etc/varnish/secret \
     -s malloc,256m
-ExecReload=/usr/sbin/varnishreload
+
+ExecReload=/usr/share/varnish/varnishreload
+ProtectSystem=full
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
 
 [Install]
 WantedBy=multi-user.target

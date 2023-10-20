@@ -39,3 +39,19 @@
   - name: install varnish package
     package:
       name: varnish
+
+  - name: copy systemd template
+    template:
+      src: varnish-systemd.j2
+      dest: /lib/systemd/system/varnish.service
+      owner: root
+      mode: 644
+
+  - name: restart systemd daemon
+    systemd:
+      daemon_reload: yes
+
+  - name: restart varnish service
+    systemd:
+      name: varnish.service
+      state: reloaded
