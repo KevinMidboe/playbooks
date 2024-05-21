@@ -1,0 +1,5 @@
+---
+package_name: xz-utils
+non_safe_version1: 5.6.0
+non_safe_version2: 5.6.1
+safe_version: 5.4.6
