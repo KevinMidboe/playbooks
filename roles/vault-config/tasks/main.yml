@@ -1,0 +1,9 @@
+---
+- name: read ansible config from vault
+  community.hashi_vault.vault_read:
+    path: 'schleppe/data/ansible'
+  register: vault_config
+
+- name: restructure vault config json output
+  set_fact:
+    vault_config: "{{ vault_config | json_query('data.data.data') }}"
