@@ -2,10 +2,10 @@
   - name: create motd-hostname file
     file:
       path: /etc/update-motd.d/20-hostname
-      state: touch
+      state: file
 
   - name: download motd executable from github.com
-    command: curl -o /usr/local/bin/motd https://raw.githubusercontent.com/kevinmidboe/motdGO/main/motd
+    command: curl -o /usr/local/bin/motd https://raw.githubusercontent.com/kevinmidboe/motdGO/main/motd-linux creates=/usr/local/bin/motd
 
   - name: set motd executable permission
     file:
@@ -13,7 +13,13 @@
       mode: +x
 
   - name: generate motd-hostname from motd executable
-    command: motd -font larry3d -str {{ inventory_hostname }} > /etc/update-motd.d/20-hostname
+    command: motd -font larry3d -str {{ inventory_hostname }} -parser motd
+    register: motd_hostname
+
+  - name: write command output to 20-hostname file
+    copy:
+      content: "{{ motd_hostname.stdout }}"
+      dest: /etc/update-motd.d/20-hostname
 
   - name: set motd-hostname executable permission
     file:
