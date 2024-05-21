@@ -1,3 +1,4 @@
 ---
-enable_wireguard_ufw_port: true
+custom_firewall_ports:
+  - 51820
 motd_abstract: 'Wireguard VPN. Use ./wireguard-install.sh for adding new clients'

@@ -1,6 +1,5 @@
 ---
-hostname: memestream
-
 # SSH key users
-ssh_keys_users: ['root', 'kevin', 'adrian']
-ssh_root_additional_key_users: ['kevin', 'adrian']
+ssh_keys_users: ['kevin', 'adrian']
+custom_firewall_ports:
+  - 80

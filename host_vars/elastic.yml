@@ -1,1 +1,5 @@
-enable_elastic_ufw_port: true
+---
+custom_firewall_ports:
+  - 9200
+  - 5601
+motd_abstract: 'Receives logs, metrics and search engine for schleppe applications \nELK node - phlox'

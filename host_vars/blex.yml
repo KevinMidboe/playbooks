@@ -1,3 +1,4 @@
 ---
-enable_plex_ufw_port: true
+custom_firewall_ports:
+  - 32400
 motd_abstract: 'Plex media server with NFS mount from mainframe.schleppe'

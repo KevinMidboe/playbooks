@@ -2,3 +2,5 @@
 varnish_release: debian
 varnish_release_codename: buster
 motd_abstract: Varnish Cache, a high-performance HTTP accelerator
+custom_firewall_ports:
+  - 80

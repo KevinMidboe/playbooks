@@ -1,3 +1,0 @@
-- hosts: all
-  vars:
-    enable_kibana_ufw_port: true

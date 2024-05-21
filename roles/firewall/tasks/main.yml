@@ -12,72 +12,11 @@
     rule: allow
     port: "22"
 
-- name: Enable 80 if webserver
+- name: Enable custom firewall ports
   ufw:
     rule: allow
-    port: "80"
-  when: "'web' in group_names or enable_80_ufw_port"
-
-- name: Enable 443 if webserver
-  ufw:
-    rule: allow
-    port: "443"
-  when: "'web' in group_names or enable_443_ufw_port"
-
-- name: Enable 9200 if elasticsearch
-  ufw:
-    rule: allow
-    port: "9200"
-  when: enable_elastic_ufw_port
-
-- name: Enable 5601 if kibana
-  ufw:
-    rule: allow
-    port: "5601"
-  when: enable_kibana_ufw_port
-
-- name: Enable 8200 if vault
-  ufw:
-    rule: allow
-    port: "8200"
-  when: enable_vault_ufw_port
-
-- name: Enable 9101 if bacula client
-  ufw:
-    rule: allow
-    port: "9101"
-  when: enable_bacula_client_ufw_port or enable_bacula_server_ufw_port
-
-- name: Enable 9102 if bacula client
-  ufw:
-    rule: allow
-    port: "9102"
-  when: enable_bacula_client_ufw_port or enable_bacula_server_ufw_port
-
-- name: Enable 9103 if bacula server
-  ufw:
-    rule: allow
-    port: "9103"
-  when: enable_bacula_server_ufw_port
-
-- name: Enable 32400 if plex server
-  ufw:
-    rule: allow
-    port: "32400"
-  when: enable_plex_ufw_port
-
-- name: Enable 3000 if gitea server
-  ufw:
-    rule: allow
-    port: "3000"
-  when: enable_gitea_ufw_port
-
-- name: Enable 51820 if wireguard server
-  ufw:
-    rule: allow
-    port: "51820"
-  when: enable_wireguard_ufw_port
-
+    port: "{{ item }}"
+  loop: "{{ custom_firewall_ports | default([]) }}"
 
 - name: Start ufw
   ufw:

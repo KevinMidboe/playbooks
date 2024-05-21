@@ -1,6 +1,5 @@
 ---
-hostname: wagovipps
-
+custom_firewall_ports:
+  - 80
 # SSH key users
-ssh_keys_users: ['root', 'kevin', 'kasper']
-ssh_root_additional_key_users: ['kevin', 'kasper']
+ssh_keys_users: ['kevin', 'kasper']

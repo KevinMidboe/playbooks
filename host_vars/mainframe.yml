@@ -1,2 +1,6 @@
 ---
 motd_abstract: Large array NAS. Provides media and archiving over NFS
+custom_firewall_ports:
+  - 2049    # nfs
+  - 139     # smb
+  - 445     # smb
