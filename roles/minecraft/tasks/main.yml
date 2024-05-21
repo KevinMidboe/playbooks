@@ -22,16 +22,30 @@
 - name: Setup minecraft server envinronment using Makefile
   make:
     chdir: /opt/minecraft
-    target: install
+    target: configure
+
+- name: Check if mcrcon exists
+  make:
+    chdir: /opt/minecraft
+    target: check-mcrcon-already-installed
+  register: mcrcon_installed
+
+- name: Install mcrcon tool
+  make:
+    chdir: /opt/minecraft
+    target: install-mcrcon
+  when: mcrcon_installed.stdout == "false"
 
 - name: Build default mcrcon target
   make:
     chdir: /opt/minecraft/tools/mcrcon
+  when: mcrcon_installed.stdout == "false"
     
 - name: Install mcrcon
   make:
     chdir: /opt/minecraft/tools/mcrcon
     target: install
+  when: mcrcon_installed.stdout == "false"
 
 - name: Configure rcon in server.properties
   make:
@@ -40,6 +54,28 @@
     
 - name: Copy mcrcon-wrapper script
   template:
-    src: mcrcon-wrapper.sh
+    src: mcrcon-wrapper.j2
     dest: /opt/minecraft/tools/mcrcon-wrapper.sh
+    mode: '0755'
 
+- name: Install latest minecraft version server jar
+  make:
+    chdir: /opt/minecraft
+    target: update
+    params:
+      version: "{{ minecraft_version }}"
+  when: minecraft_version
+
+- name: Ensure folder permissions allows user minecraft
+  file:
+    path: /opt/minecraft
+    state: directory
+    recurse: yes
+    owner: minecraft
+    group: minecraft
+
+- name: Restart minecraft service
+  ansible.builtin.systemd_service:
+    state: restarted
+    daemon_reload: true
+    name: minecraft
