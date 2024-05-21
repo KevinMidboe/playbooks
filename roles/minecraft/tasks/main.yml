@@ -5,14 +5,6 @@
     state: directory
     mode: 0755
 
-- name: Install java openjdk 8
-  package:
-    name:
-      - git
-      - build-essential
-      - openjdk-8-jre-headless
-    state: latest
-
 - name: Create minecraft user
   user:
     name: minecraft
