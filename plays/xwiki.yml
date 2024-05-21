@@ -16,6 +16,6 @@
 - name: Setup xwiki working directory and move docker-compose file
   hosts: all
   roles:
-    #    - role: roles/docker
-    # - role: roles/firewall
+    - role: roles/docker
+    - role: roles/firewall
     - role: roles/xwiki
