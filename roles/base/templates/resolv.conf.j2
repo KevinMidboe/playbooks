@@ -1,6 +1,6 @@
 # {{ ansible_managed }}
 domain {{ dns_domain }}
 search {{ dns_domain }}
-{% for server dns_nameservers %}
+{% for server in dns_nameservers %}
 nameserver {{ server }}
 {% endfor %}
