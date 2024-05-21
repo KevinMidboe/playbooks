@@ -1,0 +1,39 @@
+- name: validate required environment variables
+  ansible.builtin.assert:
+    that:
+      - item != ''
+    fail_msg: "ERROR! Set environment varaibles defined in README"
+  loop:
+    - '{{ XWIKI_DB_USER }}'
+    - '{{ XWIKI_***REMOVED*** }}'
+    - '{{ XWIKI_DB_ROOT_PASSWORD }}'
+
+- name: xwiki postgres database directory
+  file:
+    path: /opt/xwiki/postgres-data
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+    recurse: yes
+
+- name: xwiki data directory
+  file:
+    path: /opt/xwiki/xwiki-data
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+    recurse: yes
+
+- name: xwiki docker-compose file
+  template:
+    src: docker-compose_yml.j2
+    dest: /opt/xwiki/docker-compose.yml
+    owner: root
+    mode: 640
+
+- name: create and start docker xwiki services
+  docker_compose:
+    project_src: /opt/xwiki
+  register: output

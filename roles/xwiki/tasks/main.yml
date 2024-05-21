@@ -1,0 +1,8 @@
+---
+- name: override xwiki variables from vault
+  include_tasks: vault-variables.yml
+  when: has_vault
+
+- name: setup app directories and docker file
+  include_tasks: app.yml
+

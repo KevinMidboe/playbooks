@@ -1,0 +1,4 @@
+---
+motd: Wiki server with xwiki
+custom_firewall_ports: 
+  - 8080
