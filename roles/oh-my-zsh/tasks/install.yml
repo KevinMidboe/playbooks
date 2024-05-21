@@ -33,14 +33,14 @@
     label: '{{ user.username }}'
 
 - name: set permissions of oh-my-zsh for users
-  become: yes
+  become: true
   file:
     path: '~{{ user.username }}/.oh-my-zsh'
     # Prevent the cloned repository from having insecure permissions. Failing to do
     # so causes compinit() calls to fail with "command not found: compdef" errors
     # for users with insecure umasks (e.g., "002", allowing group writability).
     mode: 'go-w'
-    recurse: yes
+    recurse: true
   with_items: "{{ users }}"
   when: "((user.oh_my_zsh | default({})).install | default(oh_my_zsh_install)) | bool"
   loop_control:
@@ -48,7 +48,7 @@
     label: '{{ user.username }}'
 
 - name: set default shell for users
-  become: yes
+  become: true
   user:
     name: '{{ user.username }}'
     shell: /bin/zsh
@@ -59,12 +59,12 @@
     label: '{{ user.username }}'
 
 - name: write .zshrc for users
-  become: yes
+  become: true
   become_user: '{{ user.username }}'
   template:
     src: zshrc.j2
     dest: '~{{ user.username }}/.zshrc'
-    backup: yes
+    backup: true
     mode: 'u=rw,go=r'
   with_items: '{{ users }}'
   when: "((user.oh_my_zsh | default({})).install | default(oh_my_zsh_install)) | bool"

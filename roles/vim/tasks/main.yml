@@ -1,4 +1,4 @@
 ---
-- include: vim_present.yml
-- include: vimrc_config.yml
-- include: clone_vundle.yml
+- include_tasks: vim_present.yml
+- include_tasks: vimrc_config.yml
+- include_tasks: clone_vundle.yml
