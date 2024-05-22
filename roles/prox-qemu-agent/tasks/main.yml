@@ -1,12 +1,4 @@
 ---
-- name: Install qemu-guest-agent via apt
-  apt:
-    name: qemu-guest-agent
-    state: present
-  when: inventory_hostname in groups["proxmox_vm"]
-
-- name: Start qemu-guest-agent
-  ansible.builtin.service:
-    name: qemu-guest-agent
-    state: started
-  when: inventory_hostname in groups["proxmox_vm"]
+- name: install and start qemu-quest-agent
+  include_tasks: qemu-apt.yml
+  when: inventory_hostname in groups.proxmox_vm

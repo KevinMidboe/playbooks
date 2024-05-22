@@ -1,0 +1,10 @@
+---
+- name: install qemu-guest-agent via apt
+  apt:
+    name: qemu-guest-agent
+    state: present
+
+- name: start qemu-guest-agent
+  ansible.builtin.service:
+    name: qemu-guest-agent
+    state: started
