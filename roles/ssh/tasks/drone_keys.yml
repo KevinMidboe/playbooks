@@ -1,8 +1,0 @@
----
-- name: Assure ssh root key file exists 
-  file: path=/etc/ssh/keys/root/authorized_keys state=file
-
-- name: User ssh keys
-  template: src=ssh/keys/{{ item }}.j2 dest=/etc/ssh/keys/{{ item }}/authorized_keys owner={{ item }} mode=640
-  with_items: "{{ ssh_keys_users | default([]) }}"
-

@@ -1,7 +1,7 @@
 ---
 # Toggle subtasks
 ssh_skip_sshd_config: false
-ssh_skip_ssh_config: false
+ssh_skip_ssh_config: true
 ssh_skip_ssh_keys: false
 
 # SSH keys for which users should be copied by default

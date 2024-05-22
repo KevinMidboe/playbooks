@@ -1,15 +1,17 @@
 ---
-- include: sshd_config.yml
+- name: setup sshd_config
+  include_tasks: sshd_config.yml
   when: not ssh_skip_sshd_config
 
-- include: ssh_config.yml
+- name: setup ssh_config
+  include_tasks: ssh_config.yml
   when: not ssh_skip_ssh_config
 
-- include: create_users.yml
+- name: create required users
+  include_tasks: create_users.yml
   when: not ssh_skip_ssh_keys
 
-- include: keys.yml
-  when: not ssh_skip_ssh_keys
+- name: sync ssh keys for users from vault
+  include_tasks: keys.yml
+  when: not ssh_skip_ssh_keys and has_vault
 
-- include: append_to_root_key.yml
-  when: (ssh_root_additional_key_users is defined) and (ssh_root_additional_key_users|length > 0)

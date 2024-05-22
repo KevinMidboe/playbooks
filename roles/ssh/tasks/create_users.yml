@@ -2,5 +2,6 @@
 - name: Added all ssh users
   ansible.builtin.user:
     name: "{{ item }}"
+    create_home: true
     shell: /bin/zsh
   with_items: "{{ ssh_keys_users | default([]) }}"

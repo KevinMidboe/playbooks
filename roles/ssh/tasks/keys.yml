@@ -6,7 +6,23 @@
   file: path=/etc/ssh/keys/{{ item }} state=directory
   with_items: "{{ ssh_keys_users | default([]) }}"
 
-- name: User ssh keys
-  template: src=ssh/keys/{{ item }}.j2 dest=/etc/ssh/keys/{{ item }}/authorized_keys owner={{ item }} mode=640
+# Expects a ssh/USER.j2 variable to exist in vaults ansible namespace
+- name: keys vault_config per user
+  copy:
+    content: "{{ vault_config['ssh/{0}.j2'.format(item)] }}"
+    dest: /etc/ssh/keys/{{ item }}/authorized_keys
+  with_items: "{{ ssh_keys_users | default([]) }}"
+
+- name: leave root public key
+  copy:
+    content: "{{ vault_config['ssh/root.j2'] }}"
+    dest: /etc/ssh/keys/root/authorized_keys
+
+- name: ensure ssh keys file permissions
+  ansible.builtin.file:
+    path: /etc/ssh/keys/{{ item }}/authorized_keys
+    state: file
+    mode: '0640'
+    owner: '{{ item }}'
   with_items: "{{ ssh_keys_users | default([]) }}"
 
