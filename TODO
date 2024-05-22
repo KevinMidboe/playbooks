@@ -1,9 +1,25 @@
+!!!! IMPORTANT !!!!
+Purge the following files from git history before going public:
+ - [ ] roles/xwiki/templates/docker-compose_yml.j2
+		- POSTGRESS_PASSWORD
+		- ***REMOVED***
+ - [ ] roles/ssh/templates/ssh/keys, /*
+
+
 
 - Move some of the variables to vault
-  - firewall
+  - [ ] firewall(?)
+	- [x] ssh keys
 
 - Create a dependency tree on what services must be up first
   - DNS
   - hostname-larry
   - 
+
+- [x] SSH : we should always create a kevin user, and ssh_keys_users
+
+- Update deichman play for nfs network mount
+	- [x] add 2049 port to host_vars
+	- [ ] add required packages to host_vars
+	- [ ] gather what it's required for and add play for configuration
 

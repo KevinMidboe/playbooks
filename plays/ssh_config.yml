@@ -5,4 +5,3 @@
     - role: roles/ssh
       ssh_skip_sshd_config: true
       ssh_skip_ssh_keys: true
-      ssh_skip_drone_keys: true
