@@ -1,0 +1,5 @@
+---
+hostname: drone
+custom_firewall_ports:
+  - 80
+motd: Drone CI server and runner

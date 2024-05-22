@@ -1,0 +1,5 @@
+---
+memory_allocation_initial: "2G"
+memory_allocation_max: "5G"
+custom_firewall_ports:
+  - 25565

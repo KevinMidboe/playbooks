@@ -1,0 +1,4 @@
+---
+custom_firewall_ports:
+  - 8200
+motd: Secret store with Hashicorp Vault

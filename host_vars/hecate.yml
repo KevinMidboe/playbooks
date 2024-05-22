@@ -1,0 +1,5 @@
+---
+hostname: hecate
+custom_firewall_ports:
+  - 53
+motd_abstract: Local DNS server using bind9

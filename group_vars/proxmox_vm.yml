@@ -1,7 +1,0 @@
----
-# Specific variables for Proxmox vm group
-users:
-  - username: kevin
-    oh_my_zsh:
-      theme: robbyrussell
-

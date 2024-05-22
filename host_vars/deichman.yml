@@ -1,0 +1,7 @@
+---
+custom_firewall_ports:
+  - 3000  # netbootxyz
+  - 8080  # netbootxyz
+  - 69    # netbootxyz
+  - 2049  # netbootxyz
+motd: PXE and tftp network boot served by netbootxyz
