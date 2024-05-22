@@ -5,7 +5,7 @@
     fail_msg: "ERROR! Set environment varaibles defined in README"
   loop:
     - '{{ XWIKI_DB_USER }}'
-    - '{{ XWIKI_***REMOVED*** }}'
+    - '{{ XWIKI_DB_PASSWORD }}'
     - '{{ XWIKI_DB_ROOT_PASSWORD }}'
 
 - name: xwiki postgres database directory

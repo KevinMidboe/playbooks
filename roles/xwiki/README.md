@@ -2,7 +2,7 @@
 
 The following environment variables are required:
  - XWIKI_DB_USER
- - XWIKI_***REMOVED***
+ - XWIKI_DB_PASSWORD
  - XWIKI_DB_ROOT_PASSWORD
 
 

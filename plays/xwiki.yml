@@ -8,7 +8,7 @@
     set_fact:
       has_vault: "{{ lookup('env', 'VAULT_ADDR') and lookup('env', 'VAULT_TOKEN') }}"
       XWIKI_DB_USER: "{{ lookup('env', 'XWIKI_DB_USER') }}"
-      XWIKI_***REMOVED***: "{{ lookup('env', 'XWIKI_***REMOVED***') }}"
+      XWIKI_DB_PASSWORD: "{{ lookup('env', 'XWIKI_DB_PASSWORD') }}"
       XWIKI_DB_ROOT_PASSWORD: "{{ lookup('env', 'XWIKI_DB_ROOT_PASSWORD') }}"
   roles:
     - { role: roles/vault-config, when: has_vault }

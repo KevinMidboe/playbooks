@@ -2,7 +2,7 @@
 Purge the following files from git history before going public:
  - [ ] roles/xwiki/templates/docker-compose_yml.j2
 		- POSTGRESS_PASSWORD
-		- ***REMOVED***
+		- DB_PASSWORD
  - [ ] roles/ssh/templates/ssh/keys, /*
 
 

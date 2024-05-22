@@ -1,6 +1,6 @@
   - name: set db credentials from vault
     set_fact:
       XWIKI_DB_USER: '{{ vault_config.XWIKI_DB_USER }}'
-      XWIKI_***REMOVED***: '{{ vault_config.XWIKI_***REMOVED*** }}'
+      XWIKI_DB_PASSWORD: '{{ vault_config.XWIKI_DB_PASSWORD }}'
       XWIKI_DB_ROOT_PASSWORD: '{{ vault_config.XWIKI_DB_ROOT_PASSWORD }}'
 
