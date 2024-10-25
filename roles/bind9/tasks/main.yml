@@ -13,17 +13,52 @@
   file:
     path: /etc/bind/zones
     state: directory
-    mode: '0745'
-    owner: root
+    owner: bind
     group: bind
 
-- name: Copy zone configuration for network/inventory
-  template: src=db-{{ dns_domain }}.j2 dest=/etc/bind/zones/db.{{ bind9_zone }} owner=root group=bind mode=644
- 
-- name: Copy named local configuration for network/inventory
-  template: src=named.conf.local-{{ dns_domain }}.j2 dest=/etc/bind/named.conf.local owner=root group=bind mode=644
+- name: Create bind9 log directory
+  file:
+    path: /var/log/named
+    state: directory
+    mode: '0745'
+    owner: bind
+    group: bind
 
-- name: Copy named options configuration for network/inventory
-  template: src=named.conf.options.j2 dest=/etc/bind/named.conf.local owner=root group=bind mode=644
+- name: Create bind9 log file
+  file:
+    path: /var/log/named/named.log
+    state: touch
+    mode: '0745'
+    owner: bind
+    group: bind
 
-  
+- name: Copy logrotate
+  template:
+    src: logrotate-bind.log.j2
+    dest: /etc/logrotate.d/bind.log
+    owner: root
+    group: root
+    mode: 644
+
+- name: Ensure file bind folder file permissions
+  file:
+    path: /etc/bind
+    state: directory
+    mode: "0755"
+    owner: bind
+    group: bind
+    recurse: yes
+
+- name: add user kevin to group bind
+  user:
+    name: kevin
+    groups: bind
+    append: yes
+
+- name: clone bind9-config from github
+  ansible.builtin.git:
+    repo: 'https://github.com/kevinmidboe/bind9-config'
+    dest: /opt/bind9-config
+
+# - name: Copy zone configuration for network/inventory
+#   template: src=db-{{ dns_domain }}.j2 dest=/etc/bind/zones/db.{{ dns_domain }} owner=root group=bind mode=644
