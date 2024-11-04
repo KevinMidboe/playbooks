@@ -1,0 +1,14 @@
+- name: write keys.conf from vault
+  copy:
+    content: "{{ vault_config['bind9/keys.conf'] }}"
+    dest: /etc/bind/keys.conf
+
+- name: write zones/db.schleppe from vault
+  copy:
+    content: "{{ vault_config['bind9/zones/db.schleppe'] }}"
+    dest: /etc/bind/zones/db.schleppe
+
+- name: ensure bind9 service is restarted
+  ansible.builtin.systemd_service:
+    state: restarted
+    name: bind9
