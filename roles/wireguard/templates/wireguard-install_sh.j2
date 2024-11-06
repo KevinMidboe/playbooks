@@ -1,0 +1,199 @@
+{% raw %}
+#!/bin/bash
+
+# Define global variables
+WG_DIR="/etc/wireguard"
+CLIENT_TEMP_DIR="/tmp/wireguard_clients"
+CONFIG_DIR="/home/kevin"
+SERVER_CONF="$WG_DIR/wg0.conf"
+BASE_IP="10.7.0."
+
+# Check for WireGuard keys, generate if missing
+check_and_generate_keys() {
+    cd "$WG_DIR" || exit
+    if [[ ! -f "privatekey" || ! -f "publickey" ]]; then
+        echo "[✗] Keys not found. Generating new WireGuard keys..."
+        umask 077
+        wg genkey | tee privatekey | wg pubkey > publickey
+        echo "[✔] Keys generated in $WG_DIR."
+    else
+        echo "[✔] Keys already exist in $WG_DIR."
+    fi
+}
+
+# Check for endpoint file, prompt user if missing
+check_and_create_endpoint() {
+    if [[ ! -f "$WG_DIR/endpoint" ]]; then
+        read -rp "Enter the WireGuard endpoint (e.g., IP:Port): " endpoint
+        echo "$endpoint" > "$WG_DIR/endpoint"
+        echo "[✔] Endpoint saved in $WG_DIR/endpoint."
+    else
+        echo "[✔] Endpoint file already exists in $WG_DIR."
+    fi
+}
+
+# Prompt for configuration name and set the path
+get_config_name() {
+    read -rp "Enter the configuration name: " config_name
+    CONFIG_FILE="$CONFIG_DIR/$config_name.conf"
+    echo "[+] New Configuration: \"$config_name\""
+}
+
+# Generate client keys in temporary directory
+generate_temp_client_keys() {
+    mkdir -p "$CLIENT_TEMP_DIR"
+    cd "$CLIENT_TEMP_DIR" || exit
+    wg genkey | tee client_privatekey | wg pubkey > client_publickey
+    echo "[✔] Temporary client keys generated in $CLIENT_TEMP_DIR."
+}
+
+# Create client configuration file with provided template
+create_client_config() {
+    local endpoint
+    endpoint=$(<"$WG_DIR/endpoint")
+    local client_privatekey
+    client_privatekey=$(<"$CLIENT_TEMP_DIR/client_privatekey")
+    local server_publickey
+    server_publickey=$(<"$WG_DIR/publickey")
+    client_ip="${BASE_IP}${next_available_ip}"
+
+    cat <<EOF > "$CONFIG_FILE"
+[Interface]
+Address = $client_ip/24
+DNS = {{ dns_nameservers | join(',') }}, {{ dns_domain }}
+PrivateKey = $client_privatekey
+
+[Peer]
+PublicKey = $server_publickey
+AllowedIPs = ${BASE_IP}0/32, 10.0.0.0/24
+Endpoint = $endpoint
+PersistentKeepalive = 25
+EOF
+    echo "[✔] Client configuration created at $CONFIG_FILE with IP $client_ip."
+}
+
+# Parse wg0.conf to get existing client names and IPs
+get_existing_peers() {
+    existing_peers=()
+    existing_ips=()
+    if [[ -f "$SERVER_CONF" ]]; then
+        existing_peers=($(grep -oP "(?<=# BEGIN_PEER ).*" "$SERVER_CONF"))
+        existing_ips=($(grep -oP "(?<=AllowedIPs = $BASE_IP)[0-9]+" "$SERVER_CONF"))
+    fi
+}
+
+# Determine the next available IP
+get_next_available_ip() {
+    if [[ ${#existing_ips[@]} -eq 0 ]]; then
+        next_available_ip=2  # Start at .2 if no existing IPs
+    else
+        max_ip=$(printf "%s\n" "${existing_ips[@]}" | sort -n | tail -n 1)
+        next_available_ip=$((max_ip + 1))
+    fi
+}
+
+# Update wg0.conf with only new client configurations
+update_server_config() {
+    # Load the server private key
+    local privatekey
+    privatekey=$(<"$WG_DIR/privatekey")
+
+    # Begin creating the server config file if it doesn't exist
+    if [[ ! -f "$SERVER_CONF" ]]; then
+        cat <<EOF > "$SERVER_CONF"
+[Interface]
+Address = ${BASE_IP}1/24
+PrivateKey = $privatekey
+ListenPort = 51820
+{% endraw %}
+PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o {{ ansible_default_ipv4.interface }} -j MASQUERADE
+PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o {{ ansible_default_ipv4.interface }} -j MASQUERADE
+{% raw %}
+EOF
+    fi
+
+    # Retrieve existing peers and IPs
+    get_existing_peers
+
+    # Iterate through each .conf file in CONFIG_DIR and add new peers only
+    for client_conf in "$CONFIG_DIR"/*.conf; do
+        [[ -e "$client_conf" ]] || continue
+        client_name=$(basename "$client_conf" .conf)
+
+        # Check if client_name is already in wg0.conf
+        if [[ ! " ${existing_peers[*]} " =~ " ${client_name} " ]]; then
+            echo "[>] Adding new peer: $client_name"
+
+            # Determine the next available IP address
+            get_next_available_ip
+            local client_ip="${BASE_IP}${next_available_ip}"
+            local client_publickey
+            client_publickey=$(<"$CLIENT_TEMP_DIR/client_publickey")
+
+            # Append new client configuration to wg0.conf
+            cat <<EOF >> "$SERVER_CONF"
+
+# BEGIN_PEER $client_name
+[Peer]
+PublicKey = $client_publickey
+AllowedIPs = $client_ip/32
+# END_PEER $client_name
+EOF
+            echo "[✔] Assigned IP $client_ip to $client_name."
+        else
+            echo "[✔] Peer $client_name already exists in $SERVER_CONF. Skipping."
+        fi
+    done
+    echo "[✔] Server configuration updated at $SERVER_CONF."
+}
+
+# Cleanup temporary files and display QR code
+cleanup() {
+    rm -rf "$CLIENT_TEMP_DIR"
+		echo ""
+    echo "[✔] Temporary files in $CLIENT_TEMP_DIR deleted."
+		echo ""
+}
+
+display_qr() {
+    qrencode -t UTF8 < "$CONFIG_FILE"
+}
+
+# Main script execution
+main() {
+    echo "==================================="
+    echo "   WireGuard Configuration Setup"
+    echo "==================================="
+		echo ""
+    
+    check_and_generate_keys
+    check_and_create_endpoint
+    get_config_name
+    generate_temp_client_keys
+    get_existing_peers
+    get_next_available_ip
+    create_client_config
+
+    # Status message for existing peers
+    echo -e "[>] Peer Devices Status"
+    for peer in "${existing_peers[@]}"; do
+        echo "    - Skipped existing peer: \`$peer\`"
+    done
+    for peer in "${existing_ips[@]}"; do
+        echo "    - Skipped existing IP: \`$BASE_IP$peer\`"
+    done
+    echo "    - New peer added: \`$config_name\`"
+    echo "        • Assigned IP: \`$client_ip\`"
+		echo ""
+
+    update_server_config
+    cleanup
+    display_qr
+    systemctl restart eq-quick@wg0.service
+
+    echo -e "\n*** Configuration Complete! ***"
+}
+
+main
+
+{% endraw %}

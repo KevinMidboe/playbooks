@@ -1,0 +1,62 @@
+---
+- name: install wireguard package
+  package:
+    name:
+      - wireguard
+      - qrencode
+    state: present
+
+- name: copy wireguard install helper script
+  template:
+    src: wireguard-install_sh.j2
+    dest: /home/kevin/wireguard-install.sh
+    owner: root
+    group: root
+    mode: 744
+
+- name: copy wireguard install helper README
+  template:
+    src: README_md.j2
+    dest: /home/kevin/README.md
+    owner: root
+    group: root
+    mode: 744
+
+- name: make sure we have tun device
+  file:
+    path: /dev/net
+    state: directory
+
+- name: create tun special block device
+  shell: "if [ ! -e /dev/net/tun ]; then mknod /dev/net/tun c 10 200; fi"
+
+- name: uncomment net.ipv4.ip_forward in /etc/sysctl.conf
+  lineinfile:
+    path: /etc/sysctl.conf
+    regexp: '^#?net.ipv4.ip_forward='
+    line: 'net.ipv4.ip_forward=1'
+    state: present
+
+- name: change ownership of /etc/wireguard folder
+  file:
+    path: /etc/wireguard
+    owner: root
+    group: root
+    recurse: yes
+
+- name: set file permissions for contents for wireguard folder
+  file:
+    path: "{{ item }}"
+    mode: "0700"
+  with_fileglob:
+    - /etc/wireguard/*
+  recurse: yes
+
+- name: apply sysctl changes
+  command: sysctl -p
+
+- name: enable wg0 service
+  service:
+    name: wg-quick@wg0.service
+    enabled: true
+    state: restarted
