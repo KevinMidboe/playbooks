@@ -1,0 +1,8 @@
+---
+- name: install syncthing ubuntu/debian
+  include_tasks: install-debian.yml
+  when:
+    - ansible_os_family == 'Debian'
+
+- name: configure syncthing
+  include_tasks: configure.yml

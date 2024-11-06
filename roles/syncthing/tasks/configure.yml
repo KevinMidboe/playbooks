@@ -1,0 +1,14 @@
+---
+# Never seen this actually be a problem, need to check again
+# when not syncing TBs
+# - name: increase max user folder watchers
+#   shell: 'echo 204800 | sudo tee /proc/sys/fs/inotify/max_user_watches'
+# 
+# - name: increase max user folder watchers (persistently)
+#   shell: 'echo "fs.inotify.max_user_watches=204800" | sudo tee -a /etc/sysctl.conf'
+
+- name: ensure syncthing systemd unit enabled & restarted
+  systemd:
+    name: syncthing@kevin.service
+    enabled: true
+    state: restarted
