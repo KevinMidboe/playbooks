@@ -48,9 +48,9 @@
   file:
     path: "{{ item }}"
     mode: "0700"
-  with_fileglob:
-    - /etc/wireguard/*
-  recurse: yes
+    with_fileglob:
+      - /etc/wireguard/*
+    recurse: yes
 
 - name: apply sysctl changes
   command: sysctl -p

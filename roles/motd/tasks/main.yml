@@ -2,7 +2,7 @@
   - name: create motd-hostname file
     file:
       path: /etc/update-motd.d/20-hostname
-      state: file
+      state: touch
 
   - name: download motd executable from github.com
     command: curl -o /usr/local/bin/motd https://raw.githubusercontent.com/kevinmidboe/motdGO/main/motd-linux creates=/usr/local/bin/motd
