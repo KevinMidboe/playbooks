@@ -1,0 +1,39 @@
+---
+- name: Ensure the cAdvisor binary is downloaded
+  get_url:
+    url: "{{ cadvisor_binary_url }}"
+    dest: "/usr/local/bin/cadvisor"
+    mode: '0755'
+  tags:
+    - install_cadvisor
+
+- name: Create cAdvisor data directory
+  file:
+    path: "/var/lib/cadvisor"
+    state: directory
+    mode: '0755'
+  tags:
+    - create_cadvisor_data_dir
+
+- name: Create cAdvisor service
+  template:
+    src: "cadvisor.service.j2"
+    dest: "/etc/systemd/system/cadvisor.service"
+    mode: '0644'
+  tags:
+    - create_cadvisor_service
+
+- name: Reload systemd to pick up the cAdvisor service
+  systemd:
+    daemon_reload: yes
+  tags:
+    - reload_systemd
+
+- name: Enable and start the cAdvisor service
+  systemd:
+    name: cadvisor
+    state: started
+    enabled: yes
+  tags:
+    - start_cadvisor
+

@@ -1,0 +1,23 @@
+---
+- name: Create nginx_prometheus_exporter service file
+  template:
+    src: "nginx_prometheus_exporter.service.j2"
+    dest: "/etc/systemd/system/nginx_prometheus_exporter.service"
+    mode: '0644'
+  tags:
+    - create_service
+
+- name: Reload systemd to pick up the nginx_prometheus_exporter service
+  systemd:
+    daemon_reload: yes
+  tags:
+    - reload_systemd
+
+- name: Enable and start the nginx_prometheus_exporter service
+  systemd:
+    name: nginx_prometheus_exporter
+    state: started
+    enabled: yes
+  tags:
+    - start_nginx_prometheus_exporter
+

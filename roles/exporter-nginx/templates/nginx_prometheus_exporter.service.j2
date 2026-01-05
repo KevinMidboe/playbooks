@@ -1,0 +1,11 @@
+[Unit]
+Description=Nginx Prometheus Exporter
+After=network.target
+
+[Service]
+User=nobody
+ExecStart=/usr/local/bin/nginx-prometheus-exporter -nginx.scrape-uri=http://127.0.0.1/nginx_status
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

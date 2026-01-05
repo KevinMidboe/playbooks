@@ -1,0 +1,23 @@
+---
+- name: Create fail2ban_exporter service file
+  template:
+    src: "fail2ban_exporter.service.j2"
+    dest: "/etc/systemd/system/fail2ban_exporter.service"
+    mode: '0644'
+  tags:
+    - create_service
+
+- name: Reload systemd to pick up the fail2ban_exporter service
+  systemd:
+    daemon_reload: yes
+  tags:
+    - reload_systemd
+
+- name: Enable and start the fail2ban_exporter service
+  systemd:
+    name: fail2ban_exporter
+    state: started
+    enabled: yes
+  tags:
+    - start_fail2ban_exporter
+

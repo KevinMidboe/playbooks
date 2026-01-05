@@ -1,0 +1,6 @@
+---
+- name: Restart fail2ban_exporter
+  systemd:
+    name: fail2ban_exporter
+    state: restarted
+    daemon_reload: yes

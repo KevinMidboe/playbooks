@@ -1,0 +1,24 @@
+---
+- name: Get fail2ban release download url
+  uri:
+    url: "https://gitlab.com/hctrdev/fail2ban-prometheus-exporter/-/releases/v{{ fail2ban_exporter_version }}/downloads/fail2ban_exporter_{{ fail2ban_exporter_version }}_linux_amd64.tar.gz"
+    follow_redirects: all
+  register: fail2ban_download_url
+
+- name: Download fail2ban Exporter
+  get_url:
+    url: "{{ fail2ban_download_url.url }}"
+    dest: "/tmp/fail2ban_exporter.tar.gz"
+
+- name: Extract fail2ban Exporter
+  unarchive:
+    src: "/tmp/fail2ban_exporter.tar.gz"
+    dest: "/tmp"
+    remote_src: yes
+
+- name: Move fail2ban Exporter binary
+  copy:
+    src: "/tmp/fail2ban_exporter"
+    dest: "/usr/sbin/fail2ban_exporter"
+    remote_src: yes
+    mode: '0755'

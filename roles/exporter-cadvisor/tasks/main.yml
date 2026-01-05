@@ -1,0 +1,5 @@
+---
+- name: Install cAdvisor (native binary)
+  include_tasks: install.yml
+  tags:
+    - install
