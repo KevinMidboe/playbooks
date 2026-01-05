@@ -1,0 +1,15 @@
+---
+- name: Install PHP and prerequisites
+  include_tasks: install_php.yml
+
+- name: Install Composer
+  include_tasks: install_composer.yml
+
+- name: Install Node.js and Yarn
+  include_tasks: install_nodejs.yml
+
+- name: Install Part-DB
+  include_tasks: install_partdb.yml
+
+- name: Configure Apache2 for Part-DB
+  include_tasks: configure_apache2.yml

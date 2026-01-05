@@ -1,0 +1,18 @@
+---
+- name: Install PHP-FPM and required extensions
+  apt:
+    name:
+      - "php{{ php_version }}-fpm"
+      - "php{{ php_version }}-common"
+      - "php{{ php_version }}-opcache"
+      - "php{{ php_version }}-curl"
+      - "php{{ php_version }}-gd"
+      - "php{{ php_version }}-mbstring"
+      - "php{{ php_version }}-xml"
+      - "php{{ php_version }}-bcmath"
+      - "php{{ php_version }}-intl"
+      - "php{{ php_version }}-zip"
+      - "php{{ php_version }}-xsl"
+      - "php{{ php_version }}-pgsql"
+    state: present
+    update_cache: yes

@@ -1,0 +1,3 @@
+---
+partdb_directory: "/opt/partdb"
+apache_config_file: "/etc/apache2/sites-available/partdb.conf"

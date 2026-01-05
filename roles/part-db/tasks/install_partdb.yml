@@ -1,0 +1,61 @@
+---
+- name: Set permissions for Part-DB directory
+  file:
+    path: "{{ partdb_directory }}"
+    owner: www-data
+    group: www-data
+    state: directory
+    mode: '0755'
+    recurse: no
+
+- name: Clone Part-DB repository
+  become: true
+  become_user: www-data
+  git:
+    repo: https://github.com/Part-DB/Part-DB-symfony.git
+    dest: "{{ partdb_directory }}"
+    force: true
+
+- name: Checkout latest release
+  become: true
+  become_user: www-data
+  shell: git checkout $(git describe --tags $(git rev-list --tags --max-count=1))
+  args:
+    chdir: "{{ partdb_directory }}"
+
+- name: Create .env.local from template
+  template:
+    src: env.local.j2
+    dest: "{{ partdb_directory }}/.env.local"
+    owner: www-data
+    group: www-data
+    mode: '0644'
+
+- name: Install PHP dependencies with Composer
+  become: true
+  become_user: www-data
+  composer:
+    working_dir: "{{ partdb_directory }}"
+    no_dev: yes
+    optimize_autoloader: yes
+
+- name: Clear cache & generate var/ files
+  become: true
+  become_user: www-data
+  shell: php bin/console cache:clear
+  args:
+    chdir: "{{ partdb_directory }}"
+
+- name: Install Node.js dependencies with Yarn
+  become: true
+  become_user: www-data
+  shell: yarn install
+  args:
+    chdir: "{{ partdb_directory }}"
+
+- name: Build frontend with Yarn
+  become: true
+  become_user: www-data
+  shell: yarn build
+  args:
+    chdir: "{{ partdb_directory }}"

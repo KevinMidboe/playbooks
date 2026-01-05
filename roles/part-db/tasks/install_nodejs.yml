@@ -1,0 +1,16 @@
+---
+- name: Add NodeSource repository for Node.js
+  shell: curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+
+- name: Install Node.js
+  apt:
+    name:
+      - nodejs
+    state: present
+    update_cache: yes
+
+- name: Install Yarn globally via npm
+  npm:
+    name: yarn
+    global: yes
+    state: present

@@ -1,0 +1,16 @@
+---
+hostname: part-db
+custom_firewall_ports:
+  - 80
+custom_packages:
+  - git
+  - curl
+  - zip
+  - ca-certificates
+  - software-properties-common
+  - apt-transport-https
+  - lsb-release
+  - nano
+  - wget
+partdb_database_url: ""
+

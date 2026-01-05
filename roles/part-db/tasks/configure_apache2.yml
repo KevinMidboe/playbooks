@@ -1,0 +1,52 @@
+---
+- name: Install apache2
+  apt:
+    name: 
+      - apache2
+      - "libapache2-mod-php{{ php_version }}"
+      - "php{{ php_version }}-pgsql"
+    state: present
+    update_cache: yes
+
+- name: Copy apache2 systemd unit template
+  template:
+    src: apache2.service.j2
+    dest: /lib/systemd/system/apache2.service
+  notify: Restart apache
+
+- name: Systemctl daemon-reload
+  systemd:
+    daemon_reload: true
+  become: true
+
+- name: Create apache site configuration
+  template:
+    src: apache2_partdb.conf.j2
+    dest: "{{ apache_config_file }}"
+    mode: '0755'
+    owner: 'root'
+    group: 'root'
+  notify: Restart apache
+
+- name: Ensure apache2 default config is removed
+  file:
+    path: /etc/apache2/sites-enabled/000-default.conf
+    state: absent
+  notify: Restart apache
+
+- name: Enable Apache config
+  file:
+    state: link
+    src: /etc/apache2/sites-available/partdb.conf
+    path: /etc/apache2/sites-enabled/partdb.conf
+    owner: root
+    group: root
+    mode: 0755
+  notify: Restart apache
+
+- name: Enable rewrite apache2 module
+  community.general.apache2_module:
+    state: present
+    name: rewrite
+  notify: Restart apache
+

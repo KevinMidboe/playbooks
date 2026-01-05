@@ -1,0 +1,8 @@
+---
+- name: Install and configure part-db
+  hosts: part-db
+  roles:
+    - role: roles/firewall
+    - role: roles/apt
+    - role: roles/part-db
+
