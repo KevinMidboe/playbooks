@@ -20,12 +20,12 @@ base_packages:
   - cu
   - openssh-server
   - openssl
-  - nload
 
 base_packages_user:
   - htop
   - tree
   - ncdu
+  - nload
 
 base_packages_python:
   - python3

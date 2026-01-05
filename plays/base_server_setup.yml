@@ -6,7 +6,7 @@
   pre_tasks:
   - name: Check for vault env variables
     set_fact:
-      has_vault: "{{ lookup('env', 'VAULT_ADDR') and lookup('env', 'VAULT_TOKEN') }}"
+      has_vault: "{{ lookup('env', 'VAULT_ADDR') and lookup('env', 'VAULT_TOKEN') and lookup('env', 'HAS_VAULT') != 'FALSE' }}"
   roles:
     - { role: roles/vault-config, when: has_vault }
 
@@ -15,6 +15,8 @@
   roles:
     - role: roles/apt
     - role: roles/base                  # - Basic server setup and configuration
+    - role: roles/docker
+      when: docker | default(false)
     - role: roles/fail2ban              # - SSH Brute force protection
     - role: roles/prox-qemu-agent       # - If proxmox vm insatll qemu agent
     - role: roles/firewall              # - Firewall, if firewall_enable is true

@@ -13,7 +13,6 @@
   apt:
     pkg: "{{ item }}"
     state: present
-    update_cache: yes
   with_items: "{{ base_packages_user | default([]) }}"
   when: not apt_skip_user_packages | default(False)
 
@@ -21,7 +20,6 @@
   apt:
     pkg: "{{ item }}"
     state: present
-    update_cache: yes
   with_items: "{{ base_packages_python | default([]) }}"
   when: not apt_skip_python_packages | default(False)
 
