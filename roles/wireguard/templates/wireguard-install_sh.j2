@@ -4,9 +4,10 @@
 # Define global variables
 WG_DIR="/etc/wireguard"
 CLIENT_TEMP_DIR="/tmp/wireguard_clients"
-CONFIG_DIR="/home/kevin"
+CONFIG_DIR="/root"
 SERVER_CONF="$WG_DIR/wg0.conf"
-BASE_IP="10.7.0."
+BASE_IP="10.8.0."
+LISTEN_PORT=35611
 
 # Check for WireGuard keys, generate if missing
 check_and_generate_keys() {
@@ -104,7 +105,7 @@ update_server_config() {
 [Interface]
 Address = ${BASE_IP}1/24
 PrivateKey = $privatekey
-ListenPort = 51820
+ListenPort = $LISTEN_PORT
 {% endraw %}
 PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o {{ ansible_default_ipv4.interface }} -j MASQUERADE
 PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o {{ ansible_default_ipv4.interface }} -j MASQUERADE

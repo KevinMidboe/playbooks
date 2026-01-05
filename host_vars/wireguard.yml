@@ -1,5 +1,5 @@
 ---
 motd: Wireguard VPN. Use ./wireguard-install.sh for adding new clients
-custom_firewall_ports:
+custom_firewall_ports: 
   - 51820
 apt_skip_user_packages: true
