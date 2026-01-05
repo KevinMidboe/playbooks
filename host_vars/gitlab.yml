@@ -1,0 +1,5 @@
+---
+custom_firewall_ports:
+  - 80
+  - 443
+motd_abstract: 'Self hosted gitlab'
