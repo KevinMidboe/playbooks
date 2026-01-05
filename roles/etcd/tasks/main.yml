@@ -1,0 +1,96 @@
+- name: "Create directory for etcd binaries"
+  file:
+    path: /opt/etcd/bin
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: "Download the tarball into the /tmp directory"
+  get_url:
+    url: https://storage.googleapis.com/etcd/{{ ETCD_VERSION }}/etcd-{{ ETCD_VERSION }}-linux-amd64.tar.gz
+    dest: /tmp/etcd.tar.gz
+    owner: root
+    group: root
+    mode: 0755
+    force: True
+
+- name: "Extract the contents of the tarball"
+  unarchive:
+    src: /tmp/etcd.tar.gz
+    dest: /opt/etcd/bin/
+    owner: root
+    group: root
+    mode: 0755
+    extra_opts:
+      - --strip-components=1
+    decrypt: True
+    remote_src: True
+
+- name: "Set permissions for etcd"
+  file:
+    path: /opt/etcd/bin/etcd
+    state: file
+    owner: root
+    group: root
+    mode: 0755
+
+- name: "Set permissions for etcdctl"
+  file:
+    path: /opt/etcd/bin/etcdctl
+    state: file
+    owner: root
+    group: root
+    mode: 0755
+
+- name: "template for exporting variables in profile"
+  template:
+    src: etcd.sh.j2
+    dest: /etc/profile.d/etcd.sh
+    owner: root
+    group: root
+    mode: 0644
+
+- name: "Create a etcd service"
+  template:
+    src: etcd.service.j2
+    dest: /etc/systemd/system/etcd.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: "Create a data directory"
+  file:
+    path: /var/lib/etcd/{{ inventory_hostname }}.etcd
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: "Create directory for etcd configuration"
+  file:
+    path: /etc/etcd
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: "Create configuration file for etcd"
+  template:
+    src: etcd.conf.yaml.j2
+    dest: /etc/etcd/etcd.conf.yaml
+    owner: root
+    group: root
+    mode: 0600
+
+- name: "Ensure enabled etcd service"
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+    enabled: true
+    name: etcd
+
+- name: "Restart etcd service"
+  ansible.builtin.systemd_service:
+    state: restarted
+    daemon_reload: true
+    name: etcd

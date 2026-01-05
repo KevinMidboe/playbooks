@@ -1,0 +1,10 @@
+---
+- name: install, setup & run etcd server node
+  hosts: all
+  pre_tasks:
+  - name: Set etcd version string
+    set_fact:
+      ETCD_VERSION: "v3.5.17"
+  roles:
+    - roles/etcd
+

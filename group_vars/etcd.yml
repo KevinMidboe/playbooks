@@ -1,0 +1,4 @@
+---
+custom_firewall_ports:
+  - 2379
+  - 2380
