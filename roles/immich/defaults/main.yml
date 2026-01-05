@@ -1,3 +1,1 @@
-nfs_mount: "mainframe.schleppe:/mnt/mainframe/app/immich"
-mount_point: "/mnt/mainframe-immich"
-
+immich_path: /opt/immich-app

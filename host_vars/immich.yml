@@ -1,0 +1,14 @@
+---
+hostname: immich
+custom_firewall_ports:
+  - 2283
+motd_abstract: 'High performance self-hosted photo and video management solution'
+docker: true
+
+mount_point: "/mnt/mainframe-immich"
+# TODO: GET FROM ENV OR VAULT
+DB_PASSWORD: ""
+
+# TODO: should not be nfs_specific var & not site-irrelevant
+# Required
+nfs_mount: "mainframe.schleppe:/mnt/mainframe/app/immich"

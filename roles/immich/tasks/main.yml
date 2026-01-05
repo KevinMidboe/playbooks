@@ -1,4 +1,15 @@
 ---
+- name: Check immich variables are defined
+  assert:
+    that:
+      - nfs_mount is defined
+      - mount_point is defined
+      - nfs_mount | length > 0
+      - mount_point | length > 0
+      - DB_PASSWORD is defined
+      - DB_PASSWORD | length > 0
+    fail_msg: "nfs_mount, mount_point & DB_PASSWORD variables are empty or not defined"
+
 - name: Ensure immich /opt dir exists
   file:
     path: /opt/immich
@@ -26,7 +37,7 @@
 
 - name: Ensure mount point exists
   file:
-    path: /mnt/mainframe-immich
+    path: "{{ mount_point }}"
     state: directory
 
 - name: Ensure immich nfs mount is in fstab
@@ -42,8 +53,12 @@
     rule: allow
     port: "2283"
 
-- name: Start immich docker containers
-  shell: "docker-compose up -d"
-  args:
-    chdir: /opt/immich
+- name: Restart immich docker service
+  community.docker.docker_compose_v2:
+    project_src: /opt/immich
+    state: restarted
 
+- name: Clean up docker images older than 24 hours 
+  community.docker.docker_prune:
+    containers: true
+    images: true
