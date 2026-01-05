@@ -3,3 +3,6 @@ custom_firewall_ports:
   - 80
   - 443
 motd_abstract: 'Self hosted gitlab'
+gitlab_domain: gitlab.schleppe.test
+gitlab_external_url: "http://{{ gitlab_domain }}"
+gitlab_version: '16.2.3-ee.0'
