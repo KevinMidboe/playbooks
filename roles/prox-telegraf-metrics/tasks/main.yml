@@ -1,0 +1,32 @@
+---
+- name: Install telegraf package
+  apt:
+    name: telegraf
+    state: present
+
+- name: Install metric package dependencies
+  apt:
+    name:
+      - lm-sensors
+    state: present
+
+- name: Telegraf metrics config template
+  template:
+    src: telegraf_config.j2
+    dest: /etc/telegraf/telegraf.conf
+
+## Replace any varaibles (from vault)
+
+- name: Enable systemd telegraf service
+  systemd:
+    name: telegraf
+    enabled: yes
+
+- name: Reload systemd daemon
+  systemd:
+    daemon_reload: true
+
+- name: Restart telegraf service
+  systemd:
+    name: telegraf
+    state: restarted

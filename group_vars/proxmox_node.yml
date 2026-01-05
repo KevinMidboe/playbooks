@@ -1,0 +1,7 @@
+---
+apt_packages:
+  - lm-sensors
+custom_firewall_ports: 
+  - 9100
+  - 9191
+

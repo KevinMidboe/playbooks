@@ -1,0 +1,16 @@
+---
+- name: copy template script to 
+  template:
+    src: proxmox-create-templates.sh.j2
+    dest: /usr/local/bin/proxmox-create-templates.sh
+    owner: root
+    mode: 755
+
+- name: execute template generation script with environment
+  shell: /usr/local/bin/proxmox-create-templates.sh
+  environment:
+    STORAGE: nvme
+    SSH_KEYFILE: "{{ vault_config['ssh_public_key'] }}"
+  register: bash_create_template
+
+- debug: msg="{{ bash_create_template.stdout }}"

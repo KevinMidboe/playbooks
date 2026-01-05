@@ -1,0 +1,116 @@
+#!/bin/bash
+
+# Create template
+# args:
+#   vm_id
+#   vm_name
+#   file name in the current directory
+function create_template() {
+    id="9$id_seq$1"
+    
+    delete_if_exists $id
+
+    # Print all of the configuration
+    echo "Creating template $2 ($id)"
+
+    # Create new VM 
+    # Feel free to change any of these to your liking
+    qm create $id --name $2 --ostype l26 
+    # Set networking to default bridge
+    qm set $id --net0 virtio,bridge=vmbr0
+    # Set display to serial
+    # qm set $id --serial0 socket --vga serial0
+    # Set memory, cpu, type defaults
+    # If you are in a cluster, you might need to change cpu type
+    qm set $id --memory 1024 --cores 2 --cpu host
+    # Set boot device to new file
+    qm set $id --scsi0 ${STORAGE}:0,import-from="$(pwd)/$3",discard=on > /dev/null 2>&1
+    # Set scsi hardware as default boot disk using virtio scsi single
+    qm set $id --boot order=scsi0 --scsihw virtio-scsi-single
+    # Set automatic boot when node starts
+    qm set $id --onboot 1
+    # Enable Qemu guest agent in case the guest has it available
+    qm set $id --agent enabled=1,fstrim_cloned_disks=1
+    # Add cloud-init device
+    qm set $id --ide2 ${STORAGE}:cloudinit
+    # Set CI ip config
+    # IP6 = auto means SLAAC (a reliable default with no bad effects on non-IPv6 networks)
+    # IP = DHCP means what it says, so leave that out entirely on non-IPv4 networks to avoid DHCP delays
+    qm set $id --ipconfig0 "ip6=auto,ip=dhcp"
+    # Set CI DNS ip config
+    qm set $id --nameserver {{ dns_nameservers | join(',') }}
+    # Set CI DNS search domain
+    qm set $id --searchdomain {{ dns_domain }}
+    # Import the ssh keyfile
+    qm set $id --sshkeys ${SSH_KEYFILE}
+    # If you want to do password-based auth instaed
+    # Then use this option and comment out the line above
+    # qm set $id --cipassword password
+    # Add the user
+    qm set $id --ciuser {{ default_user }}
+    # Resize the disk to 8G, a reasonable minimum. You can expand it more later.
+    # If the disk is already bigger than 8G, this will fail, and that is okay.
+    qm disk resize $id scsi0 4G
+    #Make it a template
+    qm template $id
+
+    #Remove file when done
+    rm $3
+}
+
+function delete_if_exists() {
+    qm list | grep $1
+    if [[ $? -eq 0 ]]; then
+        echo "Destroying $id"
+        qm destroy --destroy-unreferenced-disks 1 $1
+    fi
+}
+#     ID_EXISTS = $(qm list | grep $1)
+#     if [[ ! -b ID_EXISTS ]]; then
+#         qm config $1
+#     fi
+
+
+# should check if exists
+# if id is taken on this host, incremenet
+# if exists delete disk
+# if exists update config
+# if not exists check ID_SEQ (?)
+# if not exist create disk and config
+
+# }
+
+# Name of your storage
+# export storage=nvme
+export storage=local-lvm
+export id_seq=$(echo $IP_ADDRESS | awk -F. '{sub(/0$/, "", $4); print $4}') || 0
+
+# The images that I've found premade
+# Feel free to add your own
+
+## Debian
+# Bookworm (12) (stable)
+wget -q "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2"
+create_template 1 "debian-12" "debian-12-genericcloud-amd64.qcow2"
+
+# Trixie (13) (testing) dailies
+wget -q "https://cloud.debian.org/images/cloud/trixie/daily/latest/debian-13-genericcloud-amd64-daily.qcow2"
+create_template 2 "debian-13-daily" "debian-13-genericcloud-amd64-daily.qcow2"
+
+## Ubuntu
+# 22.04 (Jammy Jellyfish) LTS
+wget -q "https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img"
+create_template 3 "ubuntu-22.04" "ubuntu-22.04-server-cloudimg-amd64.img" 
+# 24.04 (Manic Minotaur)
+wget -q "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img"
+create_template 4 "ubuntu-24.04" "ubuntu-24.04-server-cloudimg-amd64.img"
+
+## FreeBSD Linux
+# FreeBSD 14.1 latest
+wget -q "https://object-storage.public.mtl1.vexxhost.net/swift/v1/1dbafeefbd4f4c80864414a441e72dd2/bsd-cloud-image.org/images/freebsd/14.1/2024-10-28/ufs/freebsd-14.1-ufs-2024-10-28.qcow2"
+create_template 6 "freebsd-14" "freebsd-14.1-ufs-2024-10-28.qcow2"
+
+## Alpine Linux
+# Alpine 3.20.3
+wget -q "https://dl-cdn.alpinelinux.org/alpine/v3.20/releases/cloud/nocloud_alpine-3.20.3-x86_64-bios-cloudinit-r0.qcow2"
+create_template 9 "alpine-3.20" "nocloud_alpine-3.20.3-x86_64-bios-cloudinit-r0.qcow2"
